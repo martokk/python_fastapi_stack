@@ -4,8 +4,8 @@ PYTHON := python
 PWD := `pwd`
 
 #* Docker variables
-PROJECT := python_fastapi_stack
-PROJECT_TITLE := Python FastAPI Stack
+PROJECT := kwc_website
+PROJECT_TITLE := kwc_website
 VERSION := latest
 PYINSTALLER_ENTRY := $(PROJECT)/__main__.py
 

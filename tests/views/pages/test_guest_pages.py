@@ -7,150 +7,150 @@ from httpx import Cookies
 from sqlmodel import Session
 
 from app import crud, models, settings
-from tests.mock_objects import MOCKED_VIDEO_1, MOCKED_VIDEOS
+from tests.mock_objects import MOCKED_GUEST_1, MOCKED_GUESTS
 
 
-@pytest.fixture(name="video_1")
-async def fixture_video_1(db_with_user: Session) -> models.Video:
+@pytest.fixture(name="guest_1")
+async def fixture_guest_1(db_with_user: Session) -> models.Guest:
     """
-    Create an video for testing.
+    Create an guest for testing.
     """
     user = await crud.user.get(db=db_with_user, username="test_user")
-    video_create = models.VideoCreate(**MOCKED_VIDEO_1)
-    return await crud.video.create_with_owner_id(
-        db=db_with_user, obj_in=video_create, owner_id=user.id
+    guest_create = models.GuestCreate(**MOCKED_GUEST_1)
+    return await crud.guest.create_with_owner_id(
+        db=db_with_user, obj_in=guest_create, owner_id=user.id
     )
 
 
-@pytest.fixture(name="videos")
-async def fixture_videos(db_with_user: Session) -> list[models.Video]:
+@pytest.fixture(name="guests")
+async def fixture_guests(db_with_user: Session) -> list[models.Guest]:
     """
-    Create an video for testing.
+    Create an guest for testing.
     """
     # Create 1 as a superuser
     user = await crud.user.get(db=db_with_user, username=settings.FIRST_SUPERUSER_USERNAME)
-    videos = []
-    video_create = models.VideoCreate(**MOCKED_VIDEOS[0])
-    videos.append(
-        await crud.video.create_with_owner_id(
-            db=db_with_user, obj_in=video_create, owner_id=user.id
+    guests = []
+    guest_create = models.GuestCreate(**MOCKED_GUESTS[0])
+    guests.append(
+        await crud.guest.create_with_owner_id(
+            db=db_with_user, obj_in=guest_create, owner_id=user.id
         )
     )
 
     # Create 2 as a normal user
     user = await crud.user.get(db=db_with_user, username="test_user")
-    for mocked_video in [MOCKED_VIDEOS[1], MOCKED_VIDEOS[2]]:
-        video_create = models.VideoCreate(**mocked_video)
-        videos.append(
-            await crud.video.create_with_owner_id(
-                db=db_with_user, obj_in=video_create, owner_id=user.id
+    for mocked_guest in [MOCKED_GUESTS[1], MOCKED_GUESTS[2]]:
+        guest_create = models.GuestCreate(**mocked_guest)
+        guests.append(
+            await crud.guest.create_with_owner_id(
+                db=db_with_user, obj_in=guest_create, owner_id=user.id
             )
         )
-    return videos
+    return guests
 
 
-def test_create_video_page(
+def test_create_guest_page(
     db_with_user: Session,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that the create video page is returned.
+    Test that the create guest page is returned.
     """
     client.cookies = normal_user_cookies
-    response = client.get("/videos/create")
+    response = client.get("/guests/create")
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/create.html"  # type: ignore
+    assert response.template.name == "guest/create.html"  # type: ignore
 
 
-def test_handle_create_video(
+def test_handle_create_guest(
     db_with_user: Session,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that a user can create a new video.
+    Test that a user can create a new guest.
     """
     client.cookies = normal_user_cookies
     response = client.post(
-        "/videos/create",
-        data=MOCKED_VIDEO_1,
+        "/guests/create",
+        data=MOCKED_GUEST_1,
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/list.html"  # type: ignore
+    assert response.template.name == "guest/list.html"  # type: ignore
 
 
 @pytest.mark.filterwarnings("ignore::sqlalchemy.exc.SAWarning")
-def test_create_duplicate_video(
+def test_create_duplicate_guest(
     db_with_user: Session,  # pylint: disable=unused-argument
-    video_1: models.Video,  # pylint: disable=unused-argument
+    guest_1: models.Guest,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:  # pytest:
     """
-    Test a duplicate video cannot be created.
+    Test a duplicate guest cannot be created.
     """
-    # Try to create a duplicate video
+    # Try to create a duplicate guest
     with pytest.raises(Exception):
         response = client.post(
-            "/videos/create",
-            data=MOCKED_VIDEO_1,
+            "/guests/create",
+            data=MOCKED_GUEST_1,
         )
     # assert response.status_code == status.HTTP_200_OK
-    # assert response.template.name == "video/create.html"  # type: ignore
-    # assert response.context["alerts"].danger[0] == "Video already exists"  # type: ignore
+    # assert response.template.name == "guest/create.html"  # type: ignore
+    # assert response.context["alerts"].danger[0] == "Guest already exists"  # type: ignore
 
 
-def test_read_video(
+def test_read_guest(
     db_with_user: Session,  # pylint: disable=unused-argument
-    video_1: models.Video,  # pylint: disable=unused-argument
+    guest_1: models.Guest,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that a user can read an video.
+    Test that a user can read an guest.
     """
-    # Read the video
+    # Read the guest
     response = client.get(
-        f"/video/{video_1.id}",
+        f"/guest/{guest_1.id}",
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/view.html"  # type: ignore
+    assert response.template.name == "guest/view.html"  # type: ignore
 
 
-def test_get_video_not_found(
+def test_get_guest_not_found(
     db_with_user: Session,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that a video not found error is returned.
+    Test that a guest not found error is returned.
     """
     client.cookies = normal_user_cookies
 
-    # Read the video
-    response = client.get("/video/8675309")
+    # Read the guest
+    response = client.get("/guest/8675309")
     assert response.status_code == status.HTTP_200_OK
-    assert response.url.path == "/videos"
+    assert response.url.path == "/guests"
 
 
-def test_get_video_forbidden(
+def test_get_guest_forbidden(
     db_with_user: Session,  # pylint: disable=unused-argument
-    video_1: models.Video,  # pylint: disable=unused-argument
+    guest_1: models.Guest,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:  # sourcery skip: extract-duplicate-method
     """
-    Test that a forbidden error is returned when a user tries to read an video
+    Test that a forbidden error is returned when a user tries to read an guest
     """
     client.cookies = normal_user_cookies
 
-    # Read the video
+    # Read the guest
     response = client.get(
-        f"/video/{video_1.id}",
+        f"/guest/{guest_1.id}",
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/view.html"  # type: ignore
+    assert response.template.name == "guest/view.html"  # type: ignore
 
     # Logout
     response = client.get(
@@ -158,165 +158,165 @@ def test_get_video_forbidden(
     )
     assert response.status_code == status.HTTP_200_OK
 
-    # Attempt Read the video
+    # Attempt Read the guest
     response = client.get(
-        f"/video/{video_1.id}",  # type: ignore
+        f"/guest/{guest_1.id}",  # type: ignore
     )
     assert response.status_code == status.HTTP_200_OK
     assert response.url.path == "/login"  # type: ignore
 
 
-def test_normal_user_get_all_videos(
+def test_normal_user_get_all_guests(
     db_with_user: Session,  # pylint: disable=unused-argument
-    videos: list[models.Video],  # pylint: disable=unused-argument
+    guests: list[models.Guest],  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
     superuser_cookies: Cookies,
 ) -> None:  # sourcery skip: extract-duplicate-method
     """
-    Test that a normal user can get all their own videos.
+    Test that a normal user can get all their own guests.
     """
 
-    # List all videos as normal user
+    # List all guests as normal user
     client.cookies = normal_user_cookies
     response = client.get(
-        "/videos",
+        "/guests",
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/list.html"  # type: ignore
+    assert response.template.name == "guest/list.html"  # type: ignore
 
-    # Assert only 2 videos are returned (not the superuser's video)
-    assert len(response.context["videos"]) == 2  # type: ignore
+    # Assert only 2 guests are returned (not the superuser's guest)
+    assert len(response.context["guests"]) == 2  # type: ignore
 
 
-def test_edit_video_page(
+def test_edit_guest_page(
     db_with_user: Session,  # pylint: disable=unused-argument
-    video_1: models.Video,  # pylint: disable=unused-argument
+    guest_1: models.Guest,  # pylint: disable=unused-argument
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that the edit video page is returned.
+    Test that the edit guest page is returned.
     """
     client.cookies = normal_user_cookies
     response = client.get(
-        f"/video/{video_1.id}/edit",  # type: ignore
+        f"/guest/{guest_1.id}/edit",  # type: ignore
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/edit.html"  # type: ignore
+    assert response.template.name == "guest/edit.html"  # type: ignore
 
-    # Test invalid video id
+    # Test invalid guest id
     response = client.get(
-        f"/video/invalid_user_id/edit",  # type: ignore
+        f"/guest/invalid_user_id/edit",  # type: ignore
     )
     assert response.status_code == status.HTTP_200_OK
     assert response.history[0].status_code == status.HTTP_302_FOUND
-    assert response.context["alerts"].danger[0] == "Video not found"  # type: ignore
-    assert response.url.path == "/videos"
+    assert response.context["alerts"].danger[0] == "Guest not found"  # type: ignore
+    assert response.url.path == "/guests"
 
 
-def test_update_video(
+def test_update_guest(
     db_with_user: Session,  # pylint: disable=unused-argument
     client: TestClient,
-    video_1: models.Video,
+    guest_1: models.Guest,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that a user can update an video.
+    Test that a user can update an guest.
     """
     client.cookies = normal_user_cookies
 
-    # Update the video
+    # Update the guest
     response = client.post(
-        f"/video/{video_1.id}/edit",  # type: ignore
-        data=MOCKED_VIDEOS[1],
+        f"/guest/{guest_1.id}/edit",  # type: ignore
+        data=MOCKED_GUESTS[1],
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/edit.html"  # type: ignore
+    assert response.template.name == "guest/edit.html"  # type: ignore
 
-    # View the video
+    # View the guest
     response = client.get(
-        f"/video/{video_1.id}",  # type: ignore
+        f"/guest/{guest_1.id}",  # type: ignore
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/view.html"  # type: ignore
-    assert response.context["video"].title == MOCKED_VIDEOS[1]["title"]  # type: ignore
-    assert response.context["video"].description == MOCKED_VIDEOS[1]["description"]  # type: ignore
-    assert response.context["video"].url == MOCKED_VIDEOS[1]["url"]  # type: ignore
+    assert response.template.name == "guest/view.html"  # type: ignore
+    assert response.context["guest"].title == MOCKED_GUESTS[1]["title"]  # type: ignore
+    assert response.context["guest"].description == MOCKED_GUESTS[1]["description"]  # type: ignore
+    assert response.context["guest"].url == MOCKED_GUESTS[1]["url"]  # type: ignore
 
-    # Test invalid video id
+    # Test invalid guest id
     response = client.post(
-        f"/video/invalid_user_id/edit",  # type: ignore
-        data=MOCKED_VIDEOS[1],
+        f"/guest/invalid_user_id/edit",  # type: ignore
+        data=MOCKED_GUESTS[1],
     )
     assert response.status_code == status.HTTP_200_OK
     assert response.history[0].status_code == status.HTTP_303_SEE_OTHER
-    assert response.context["alerts"].danger[0] == "Video not found"  # type: ignore
-    assert response.url.path == "/videos"
+    assert response.context["alerts"].danger[0] == "Guest not found"  # type: ignore
+    assert response.url.path == "/guests"
 
 
-def test_delete_video(
+def test_delete_guest(
     db_with_user: Session,  # pylint: disable=unused-argument
-    video_1: models.Video,
+    guest_1: models.Guest,
     client: TestClient,
     normal_user_cookies: Cookies,
 ) -> None:
     """
-    Test that a user can delete an video.
+    Test that a user can delete an guest.
     """
     client.cookies = normal_user_cookies
 
-    # Delete the video
+    # Delete the guest
     response = client.get(
-        f"/video/{video_1.id}/delete",
+        f"/guest/{guest_1.id}/delete",
     )
     assert response.status_code == status.HTTP_200_OK
     assert response.history[0].status_code == status.HTTP_303_SEE_OTHER
-    assert response.url.path == "/videos"
+    assert response.url.path == "/guests"
 
-    # View the video
+    # View the guest
     response = client.get(
-        f"/video/{video_1.id}",
+        f"/guest/{guest_1.id}",
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.context["alerts"].danger == ["Video not found"]  # type: ignore
+    assert response.context["alerts"].danger == ["Guest not found"]  # type: ignore
 
-    # Test invalid video id
+    # Test invalid guest id
     response = client.get(
-        f"/video/invalid_user_id/delete",
+        f"/guest/invalid_user_id/delete",
     )
     assert response.status_code == status.HTTP_200_OK
     assert response.history[0].status_code == status.HTTP_303_SEE_OTHER
-    assert response.context["alerts"].danger[0] == "Video not found"  # type: ignore
-    assert response.url.path == "/videos"
+    assert response.context["alerts"].danger[0] == "Guest not found"  # type: ignore
+    assert response.url.path == "/guests"
 
     # Test DeleteError
-    with patch("app.crud.video.remove", side_effect=crud.DeleteError):
+    with patch("app.crud.guest.remove", side_effect=crud.DeleteError):
         response = client.get(
-            f"/video/123/delete",
+            f"/guest/123/delete",
         )
         assert response.status_code == status.HTTP_200_OK
         assert response.history[0].status_code == status.HTTP_303_SEE_OTHER
-        assert response.context["alerts"].danger[0] == "Error deleting video"  # type: ignore
+        assert response.context["alerts"].danger[0] == "Error deleting guest"  # type: ignore
 
 
-def test_list_all_videos(
+def test_list_all_guests(
     db_with_user: Session,  # pylint: disable=unused-argument
-    videos: list[models.Video],  # pylint: disable=unused-argument
+    guests: list[models.Guest],  # pylint: disable=unused-argument
     client: TestClient,
     superuser_cookies: Cookies,
 ) -> None:  # sourcery skip: extract-duplicate-method
     """
-    Test that a superuser can get all videos.
+    Test that a superuser can get all guests.
     """
 
-    # List all videos as superuser
+    # List all guests as superuser
     client.cookies = superuser_cookies
     response = client.get(
-        "/videos/all",
+        "/guests/all",
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.template.name == "video/list.html"  # type: ignore
+    assert response.template.name == "guest/list.html"  # type: ignore
 
-    # Assert all 3 videos are returned
-    assert len(response.context["videos"]) == 3  # type: ignore
+    # Assert all 3 guests are returned
+    assert len(response.context["guests"]) == 3  # type: ignore

@@ -75,7 +75,7 @@ pytest-asyncio = "^0.20.3"
 
 [tool.black]
 # https://github.com/psf/black
-target-version = ["py312"]
+target-version = ["py311"]
 line-length = 100
 color = true
 

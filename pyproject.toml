@@ -111,7 +111,7 @@ message_template="{path}  :  {line} -  {msg_id} -{msg}"
 [tool.isort]
 # https://github.com/timothycrosley/isort/
 profile = "black"
-py_version = 312
+py_version = 311
 line_length = 100
 
 known_typing = ["typing", "typings", "types", "typing_extensions", "mypy", "mypy_extensions"]

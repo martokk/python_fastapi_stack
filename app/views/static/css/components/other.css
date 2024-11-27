@@ -1,0 +1,198 @@
+/* ==========================================================================
+   Feature Lists
+   ========================================================================== */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 0rem auto;
+    max-width: fit-content;
+}
+
+.feature-list li {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--black);
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.feature-list li svg {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.feature-list li span {
+    flex-grow: 1;
+}
+
+
+/* ==========================================================================
+   Unavailable
+   ========================================================================== */
+
+.unavailable {
+    opacity: 0.5 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.unavailable-notice {
+    color: #9c0000;
+    font-weight: 500;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    background-color: rgba(0, 0, 0, 0.1);
+    align-self: center;
+}
+
+.unavailable::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+}
+
+.unavailable-notice svg {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    color: #9c0000 !important;
+    align-content: center;
+}
+
+/* ==========================================================================
+   Accordion
+   ========================================================================== */
+.accordion {
+    padding: 5rem 0;
+}
+
+.accordion-item {
+    border: none;
+    margin-bottom: 1rem;
+}
+
+.accordion-button {
+    background-color: var(--white);
+    color: var(--black);
+    font-weight: 600;
+    border-radius: 0.5rem !important;
+    padding: 1.25rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--gold);
+    color: var(--black);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.accordion-body {
+    background-color: var(--white);
+    color: var(--black);
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    padding: 1.25rem;
+}
+
+/* ==========================================================================
+   Timeline
+   ========================================================================== */
+/* Timeline Items */
+.timeline-item {
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    position: relative;
+    transition: var(--transition);
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Timeline connector */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 100%;
+    width: 6px;
+    height: 2rem;
+    background: var(--gold);
+    z-index: 1;
+}
+
+/* Remove connector from last item */
+.timeline-item:last-child::before {
+    display: none;
+}
+
+/* Date circle */
+.timeline-item .date {
+    font-size: 1.3rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    margin: auto auto auto 1rem;
+}
+
+.timeline-item .content {
+    flex-grow: 1;
+}
+
+.timeline-item h3 {
+    color: var(--black);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-item p {
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Other
+   ========================================================================== */
+
+/* Step Number */
+.step-number {
+    width: 50px;
+    height: 50px;
+    background-color: var(--black);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.donation-widget.tabs {
+    max-width: 100% !important;
+    min-width: 100% !important;
+}

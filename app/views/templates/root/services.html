@@ -1,0 +1,121 @@
+{% extends "base/base.html" %}
+
+{% block title %}Services{% endblock %}
+
+{% block content %}
+
+
+<!-- Main Services Section -->
+<section class="section section-white" id="services">
+    <div class="container">
+
+        <h2 class="mb-5">Our Services</h2>
+
+        <!-- Homeless Services -->
+        <div class="card card-gold gold-scroll mb-5" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <h3 data-aos="fade-up">Homeless Services</h3>
+                        <p class="lead" data-aos="fade-up">Comprehensive support for individuals experiencing homelessness</p>
+                        <ul class="feature-list">
+                            <li data-aos="fade-left"><i class="fas fa-check-circle text-success"></i> Coordinated Entry Intake (Housing Assistance)</li>
+                            <li data-aos="fade-right"><i class="fas fa-check-circle text-success"></i> Emergency Food Support</li>
+                            <li data-aos="fade-left"><i class="fas fa-check-circle text-success"></i> Essential Survival Items</li>
+                            <li data-aos="fade-right"><i class="fas fa-check-circle text-success"></i> Hygiene & Personal Care</li>
+                        </ul>
+                        <button class="btn btn-black black-shine-animation shine mt-3" data-aos="fade-up">Learn More</button>
+                    </div>
+                </div>
+                <div class="col-lg-6" >
+                    <img src="/static/images/photos/clhy.jpeg" alt="Homeless Services" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Temporarily Unavailable Services -->
+        <h2 class="section-title mb-4" data-aos="fade-up">Temporarily Unavailable Services</h2>
+        <p class="lead text-center mb-5" data-aos="fade-up">These services will resume once our relocation is complete.</p>
+
+        <!-- Food Pantry -->
+        <div class="card card-silver silver-scroll mb-5 unavailable" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <h3 data-aos="fade-up">Food Pantry</h3>
+                        <p class="lead" data-aos="fade-up">Weekly food assistance for families in need</p>
+                        <!-- <ul class="feature-list">
+                            <li><i class="fas fa-clock"></i> Normal Hours: Tuesdays 4:00 PM - 5:30 PM</li>
+                            <li><i class="fas fa-box"></i> Fresh Produce & Pantry Staples</li>
+                            <li><i class="fas fa-user-check"></i> No Referral Required</li>
+                            <li><i class="fas fa-map-marker-alt"></i> Drive-through & Walk-up Options</li>
+                        </ul> -->
+                        <div class="unavailable-notice mt-3 silver-scroll" data-aos="fade-up">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Temporarily Unavailable During Relocation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1" data-aos="fade-up">
+                    <img src="/static/images/photos/Pantry1.jpg" alt="Food Pantry" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Hot Breakfast Program -->
+        <div class="card card-silver silver-scroll mb-5 unavailable" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <h3 data-aos="fade-up">Hot Breakfast Program</h3>
+                        <p class="lead" data-aos="fade-up">Nutritious morning meals in a welcoming environment</p>
+                        <!-- <ul class="feature-list">
+                            <li><i class="fas fa-clock"></i> Normal Hours: Thursday & Friday 8:30 AM - 9:15 AM</li>
+                            <li><i class="fas fa-utensils"></i> Hot, Fresh-Cooked Meals</li>
+                            <li><i class="fas fa-users"></i> Community Dining</li>
+                            <li><i class="fas fa-hands-helping"></i> Resource Connection Opportunity</li>
+                        </ul> -->
+                        <div class="unavailable-notice mt-3 silver-scroll" data-aos="fade-up">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Temporarily Unavailable During Relocation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up">
+                    <img src="/static/images/photos/429590484_806644744837052_4452797908876993795_n.jpg" alt="Breakfast Program" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Shower Program -->
+        <div class="card card-silver silver-scroll mb-5 unavailable" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+                    <div class="card-body">
+                        <h3 data-aos="fade-up">Shower Program</h3>
+                        <p class="lead" data-aos="fade-up">Clean, private shower facilities with hygiene supplies</p>
+                        <!-- <ul class="feature-list">
+                            <li><i class="fas fa-clock"></i> Normal Hours: Thursday & Friday 7:00 AM - 9:00 AM</li>
+                            <li><i class="fas fa-shower"></i> Private Shower Facilities</li>
+                            <li><i class="fas fa-soap"></i> Hygiene Items Provided</li>
+                            <li><i class="fas fa-tshirt"></i> Clean Towels Available</li>
+                        </ul> -->
+                        <div class="unavailable-notice mt-3 silver-scroll" data-aos="fade-up">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Temporarily Unavailable During Relocation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 order-lg-1" data-aos="fade-up">
+                    <img src="/static/images/photos/455656286_911607901007402_6433761159608115412_n.jpg" alt="Shower Program" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Contact Us Section -->
+{% include '/root/sections/contact.html' %}
+
+{% endblock content %}

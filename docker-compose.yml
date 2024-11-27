@@ -1,12 +1,12 @@
 version: "3.9"
 
 services:
-  kwc_website:
-    container_name: "kwc_website"
-    image: ghcr.io/martokk/kwc_website:latest
+  kwc-website:
+    container_name: "kwc-website"
+    image: ghcr.io/martokk/kwc-website:latest
     restart: unless-stopped
     volumes:
-      # - /home/ubuntu/volumes/kwc_website/data:/kwc_website/data
+      # - /home/ubuntu/volumes/kwc-website/data:/kwc-website/data
       - ./app:/app
     ports:
       - "5000:5000"

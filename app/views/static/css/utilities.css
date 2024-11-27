@@ -1,0 +1,64 @@
+/* Media Queries */
+@media (max-width: 991.98px) {
+    .service-card h3 {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .service-card p {
+        font-size: 1.1rem;
+    }
+
+    .info-message p {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .counter i {
+        font-size: 3.5rem;
+    }
+
+    .make-difference {
+        padding: 60px 0;
+    }
+
+    .difference-card {
+        padding: 2rem;
+    }
+
+    .difference-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .difference-card p {
+        font-size: 1rem;
+    }
+
+    .counter {
+        margin-bottom: 40px;
+    }
+
+    .donation-buttons {
+        justify-content: center;
+    }
+
+    .service-card {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .counter-value {
+        font-size: 2rem;
+    }
+
+    .service-card h3 {
+        font-size: 1.75rem;
+        font-weight: 600;
+    }
+}

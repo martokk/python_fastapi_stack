@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi_utils.tasks import repeat_every
 from sqlmodel import Session
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from app import logger, models, settings, version
 from app.api import deps
@@ -25,6 +25,55 @@ app.include_router(views_router)
 app.mount("/static", StaticFiles(directory=STATIC_PATH))
 
 
+# Add the middleware to your FastAPI app
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Middleware that adds security headers to all responses.
+
+    This middleware adds various security headers to help protect against common web vulnerabilities:
+    - X-Frame-Options: Prevents clickjacking attacks
+    - X-Content-Type-Options: Prevents MIME type sniffing
+    - Referrer-Policy: Controls how much referrer information is sent
+    - Strict-Transport-Security: Enforces HTTPS connections
+    - Content-Security-Policy: Controls allowed content sources
+    """
+
+    async def dispatch(self, request, call_next):
+        """Process the request/response and add security headers.
+
+        Args:
+            request: The incoming request
+            call_next: The next middleware/route handler in the chain
+
+        Returns:
+            response: The response with added security headers
+        """
+        response = await call_next(request)
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Content-Security-Policy"] = (
+            """
+            default-src 'self';
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com;
+            script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com;
+            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+            font-src 'self' https://fonts.gstatic.com;
+            img-src 'self' data: https://*.googleapis.com https://*.gstatic.com;
+            frame-src https://donorbox.org https://www.google.com https://*.google.com;
+            connect-src 'self' https://*.googleapis.com https://maps.googleapis.com;
+            worker-src 'self' blob:;
+            child-src blob:;
+        """.replace(
+                "\n", " "
+            ).strip()
+        )
+        return response
+
+
+app.add_middleware(SecurityHeadersMiddleware)
+
+
 @app.on_event("startup")  # type: ignore
 async def on_startup(db: Session = next(deps.get_db())) -> None:
     """
@@ -42,7 +91,7 @@ async def on_startup(db: Session = next(deps.get_db())) -> None:
     await init_initial_data(db=db)
 
 
-@app.on_event("startup")  # type: ignore
-@repeat_every(seconds=120, wait_first=False)
-async def repeating_task() -> None:
-    logger.debug("This is a repeating task example that runs every 120 seconds.")
+# @app.on_event("startup")  # type: ignore
+# @repeat_every(seconds=120, wait_first=False)
+# async def repeating_task() -> None:
+#     logger.debug("This is a repeating task example that runs every 120 seconds.")

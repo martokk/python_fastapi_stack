@@ -4,8 +4,8 @@ PYTHON := python
 PWD := `pwd`
 
 #* Docker variables
-PROJECT := kwc_website
-PROJECT_TITLE := kwc_website
+PROJECT := kwc-website
+PROJECT_TITLE := kwc-website
 VERSION := latest
 PYINSTALLER_ENTRY := $(PROJECT)/__main__.py
 

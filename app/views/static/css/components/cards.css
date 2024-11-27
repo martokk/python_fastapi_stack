@@ -1,0 +1,213 @@
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.card {
+    height: 100%;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid rgba(0, 0, 0, .125);
+    color: var(--black);
+}
+
+.card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.card h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.card .lead {
+    font-size: 1.2rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.card p {
+    color: var(--black);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.card svg {
+    font-size: 2rem;
+    color: var(--gold);
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    transition: var(--transition);
+}
+
+
+/* ==========================================================================
+   Card Colors
+   ========================================================================== */
+
+.card-gold {
+    background-color: var(--gold);
+}
+
+
+.card-silver {
+    background-color: var(--silver);
+}
+
+.card-black {
+    background-color: var(--black);
+}
+
+.card-black p {
+    color: var(--white);
+}
+
+.card-black .btn-gold {
+    background-color: var(--gold);
+    color: var(--black);
+}
+
+.card-black .btn-gold:hover {
+    transform: scale(1.05);
+    color: var(--black);
+    background: var(--silver-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+.card-white {
+    background-color: var(--white);
+}
+
+.card-gold h3,
+.card-silver h3 {
+    color: var(--black);
+}
+
+.card-black h3 {
+    color: var(--gold);
+}
+
+.card-gold svg,
+.card-silver scg {
+    color: var(--black);
+}
+
+.card-black svg {
+    color: var(--gold);
+}
+
+/* ==========================================================================
+   Card Body
+   ========================================================================== */
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.card-body .btn-gold,
+.card-body .btn-black {
+    margin-top: auto;
+    width: auto;
+    align-self: center;
+}
+
+.card-body p {
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Team Cards
+   ========================================================================== */
+
+.team-card {
+    text-align: center;
+    height: 100%;
+}
+
+.team-photo {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.team-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+}
+
+.team-card .position {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
+
+/* ==========================================================================
+   Other
+   ========================================================================== */
+
+/* Card Icon */
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+/* Contact/Info Cards */
+.info-card {
+    text-align: center;
+    padding: 2rem;
+    height: 100%;
+}
+
+.info-card .icon-circle {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+}
+
+.info-card .info-link {
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: block;
+    transition: var(--transition);
+}
+
+.info-card .info-link:hover {
+    transform: scale(1.05);
+}
+
+/* Map Container */
+.map-wrapper {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    height: 300px;
+}
+
+.map-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}

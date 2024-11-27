@@ -1,0 +1,19 @@
+/* ==========================================================================
+   Text Colors
+   ========================================================================== */
+
+.text-black {
+    color: var(--black);
+}
+
+.text-gold {
+    color: var(--gold);
+}
+
+.text-white {
+    color: var(--white);
+}
+
+.text-silver {
+    color: var(--silver);
+}

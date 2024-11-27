@@ -1,0 +1,32 @@
+:root {
+    /* Colors */
+    --white: #ffffff;
+
+    /* Gold */
+    --gold: #f7df71;
+    --gold-gradient-0: linear-gradient(0deg, #f8d568, #d8b85a, #ffefaa, #d8b85a, #f8d568);
+    --gold-gradient-45: linear-gradient(45deg, #f8d568, #d8b85a, #ffefaa, #d8b85a, #f8d568);
+    --gold-gradient-90: linear-gradient(90deg, #f8d568, #d8b85a, #ffefaa, #d8b85a, #f8d568);
+    --gold-gradient-135: linear-gradient(135deg, #f8d568, #d8b85a, #ffefaa, #d8b85a, #f8d568);
+
+    /* Silver */
+    --silver: #d0d0d0;
+    --silver-gradient-0: linear-gradient(0deg, #c6c6c6, #bdbdbd, #f4f4f4, #bdbdbd, #c6c6c6);
+    --silver-gradient-45: linear-gradient(45deg, #c6c6c6, #bdbdbd, #f4f4f4, #bdbdbd, #c6c6c6);
+
+    /* Black */
+    --black: #000000;
+    --black-gradient-0: linear-gradient(0deg, #1a1a1a, #000000, #2f2f2f, #000000, #1a1a1a);
+    --black-gradient-45: linear-gradient(45deg, #1a1a1a, #000000, #2f2f2f, #000000, #1a1a1a);
+
+    /* Navbar */
+    --navbar-height: 160px;
+    --navbar-height-scrolled: 70px;
+    --navbar-height-mobile: 170px;
+    --navbar-height-mobile-scrolled: 50px;
+    --gold-bar-height: 46px;
+
+    /* Other */
+    --transition: all 0.3s ease;
+
+}

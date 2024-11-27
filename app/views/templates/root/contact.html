@@ -1,0 +1,112 @@
+{% extends "base/base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<!-- Hero Message Section -->
+<section class="section section-silver silver-scroll">
+    <div class="container">
+        <h2 class="text-center" data-aos="fade-up">Contact Us</h2>
+        <p class="lead text-center" data-aos="fade-up">We're here to help. Reach out to us with any questions or concerns.</p>
+    </div>
+</section>
+
+<!-- Contact Methods Section -->
+<section class="section section-white">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Phone Contact -->
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="card card-gold gold-scroll hover-shine">
+                    <div class="card-body text-center">
+                        <i class="fas fa-phone card-icon"></i>
+                        <h3>Call Us</h3>
+                        <p>Available Monday-Friday, 9am-5pm</p>
+                        <a href="tel:262-452-0212" class="btn btn-black black-shine-animation">262-452-0212</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Contact -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card card-gold gold-scroll hover-shine">
+                    <div class="card-body text-center">
+                        <i class="fas fa-envelope card-icon"></i>
+                        <h3>Email Us</h3>
+                        <p>We'll respond within 24 hours</p>
+                        <a href="mailto:info@kenoshawelcomecenter.org" class="btn btn-black black-shine-animation">info@kenoshawelcomecenter.org</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visit Us -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="card card-gold gold-scroll hover-shine">
+                    <div class="card-body text-center">
+                        <i class="fas fa-map-marker-alt card-icon"></i>
+                        <h3>Visit Us</h3>
+                        <p>Our Service Location</p>
+                        <address class="mb-0">
+                            <a href="https://maps.google.com" class="btn btn-black black-shine-animation">2006 60th St. Kenosha, WI 53140</a>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="section section-silver silver-scroll">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card card-white">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Send Us a Message</h2>
+                        <form id="contactForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="subject" class="form-label">Subject</label>
+                                        <input type="text" class="form-control" id="subject" required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="message" class="form-label">Message</label>
+                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-gold gold-shine-animation">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Location Information Section -->
+{% include 'root/sections/location.html' %}
+
+<!-- Social Media and Newsletter Section -->
+{% include '/root/sections/follow_us.html' %}
+
+{% endblock content %}

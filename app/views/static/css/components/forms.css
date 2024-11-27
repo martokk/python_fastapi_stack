@@ -1,0 +1,31 @@
+/* ==========================================================================
+   Form Components
+   ========================================================================== */
+
+/* Newsletter Form */
+.newsletter-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.newsletter-form input {
+    background-color: #fff;
+    border: 2px solid var(--gold);
+    color: var(--black);
+    padding: 12px;
+    border-radius: 25px;
+}
+
+.newsletter-form .btn-gold {
+    background-color: var(--gold);
+    color: var(--black);
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 1.3rem;
+}
+
+.newsletter-form .btn-gold:hover {
+    background-color: var(--black) !important;
+    color: var(--gold);
+    transform: none;
+}

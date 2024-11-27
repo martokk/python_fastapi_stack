@@ -1,0 +1,72 @@
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+
+/* Base Button Styles */
+.btn-gold {
+    background-color: var(--gold);
+    color: var(--black);
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: var(--transition) !important;
+}
+
+.btn-gold:hover {
+    transform: scale(1.05);
+    transition: var(--transition);
+    color: var(--gold);
+    background: var(--black-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+.btn-black {
+    background-color: var(--black);
+    color: var(--gold);
+    padding: 10px 25px;
+    font-size: 1.3rem;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: var(--transition) !important;
+}
+
+.btn-black:hover {
+    transform: scale(1.05);
+    transition: var(--transition);
+    color: var(--black);
+    background: var(--silver-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+
+
+.btn-wide {
+    padding: 15px 30px;
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 400px;
+    display: inline-block;
+}
+
+.btn-wide:hover {
+    transform: scale(1.1);
+    text-decoration: none;
+    background: var(--black-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+.btn-large {
+    font-size: 1.5rem;
+}
+
+
+.contact-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+}

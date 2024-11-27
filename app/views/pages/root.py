@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Response
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 
-from app import models, settings
+from app import models
 from app.views import deps, templates
 
 router = APIRouter()
@@ -24,17 +24,22 @@ async def root_index_router(
     """
     if current_user:
         return await root_index_authenticated(request, current_user)
-    return await root_index_unauthenticated()
+    return await root_index_unauthenticated(request)
 
 
-async def root_index_unauthenticated() -> Response:
+async def root_index_unauthenticated(
+    request: Request,
+) -> Response:
     """
     Home page (Not authenticated)
 
     Returns:
         Response: Home page
     """
-    return RedirectResponse(url="/login")
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("root/home.html", context=context)
 
 
 async def root_index_authenticated(
@@ -52,13 +57,105 @@ async def root_index_authenticated(
         Response: Home page
     """
     alerts = models.Alerts().from_cookies(request.cookies)
-    title = f"{settings.PROJECT_NAME} - Home"
-    message = f"Welcome to the {settings.PROJECT_NAME}, {current_user.username}!"
     context = {
         "request": request,
         "current_user": current_user,
-        "title": title,
-        "message": message,
         "alerts": alerts,
     }
     return templates.TemplateResponse("root/home.html", context=context)
+
+
+@router.get("/services", response_class=HTMLResponse)
+async def services(
+    request: Request,
+) -> Response:
+    """
+    Services page
+
+    Returns:
+        Response: Services page
+    """
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("root/services.html", context=context)
+
+
+@router.get("/volunteer", response_class=HTMLResponse)
+async def volunteer(
+    request: Request,
+) -> Response:
+    """
+    Volunteer page
+
+    Returns:
+        Response: Volunteer page
+    """
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("root/volunteer.html", context=context)
+
+
+@router.get("/about", response_class=HTMLResponse)
+async def about(
+    request: Request,
+) -> Response:
+    """
+    About page
+
+    Returns:
+        Response: About page
+    """
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("root/about.html", context=context)
+
+
+@router.get("/contact", response_class=HTMLResponse)
+async def contact(
+    request: Request,
+) -> Response:
+    """
+    Contact page
+
+    Returns:
+        Response: Contact page
+    """
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("root/contact.html", context=context)
+
+
+@router.get("/donate", response_class=HTMLResponse)
+async def donate(
+    request: Request,
+) -> Response:
+    """
+    Donate page
+
+    Returns:
+        Response: Donate page
+    """
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("root/donate.html", context=context)
+
+
+@router.get("/about2", response_class=HTMLResponse)
+async def about(
+    request: Request,
+) -> Response:
+    """
+    About page
+
+    Returns:
+        Response: About page
+    """
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("temp/about.html", context=context)

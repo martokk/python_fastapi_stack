@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Hover Shine Effects
+   ========================================================================== */
+
+/* Hover Shine Effect */
+.hover-shine {
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: .3s;
+}
+
+.hover-shine:hover {
+    box-shadow: 1px 1px 25px 10px rgba(255, 255, 255, .3);
+}
+
+.hover-shine:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -500%;
+    width: 500%;
+    height: 200%;
+    background: none;
+    transition: 2s;
+}
+
+.hover-shine:hover:before {
+    left: 500%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .4), transparent);
+}
+
+/* ==========================================================================
+   Scroll Effects (js/scroll-effect.js)
+   ========================================================================== */
+
+/* Gold Scroll Effect  */
+.gold-scroll {
+    background: var(--gold-gradient-0);
+    background-size: 200% 300%;
+    transition: 0s;
+}
+
+/* Silver Scroll Effect  */
+.silver-scroll {
+    background: var(--silver-gradient-0);
+    background-size: 200% 300%;
+    transition: 0s;
+}
+
+/* Black Scroll Effect  */
+.black-scroll {
+    background: var(--black-gradient-0);
+    background-size: 200% 300%;
+    transition: 0s;
+}
+
+/* ==========================================================================
+   Shine Animations
+   ========================================================================== */
+
+/* Gold Shine Animation */
+.gold-shine-animation {
+    background: var(--gold-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+/* Silver Shine Animation */
+.silver-shine-animation {
+    background: var(--silver-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+/* Black Shine Animation */
+.black-shine-animation {
+    background: var(--black-gradient-45);
+    animation: shine-animation-keyframes 10s ease infinite;
+    background-size: 200% 200%;
+}
+
+/* Shine Animation Keyframes */
+@keyframes shine-animation-keyframes {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 100% 100%;
+    }
+
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* ==========================================================================
+   Other Effects
+   ========================================================================== */
+
+/* Shadow Effects */
+.shadow-lg {
+    box-shadow: 0 0 3rem 0 rgb(0 0 0 / 25%) !important;
+}
+
+/* Counter Value Effect (js/counters.js) */
+.counter-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--black);
+}

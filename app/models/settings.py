@@ -1,4 +1,5 @@
-from pydantic import BaseSettings, EmailStr
+from pydantic import EmailStr
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -44,7 +45,7 @@ class Settings(BaseSettings):
 
     # Users
     FIRST_SUPERUSER_USERNAME: str = "admin"
-    FIRST_SUPERUSER_EMAIL: EmailStr = EmailStr("admin@example.com")
+    FIRST_SUPERUSER_EMAIL: EmailStr = "admin@example.com"
     FIRST_SUPERUSER_PASSWORD: str = "2sd3f4g5h6j7k8l9"
     USERS_OPEN_REGISTRATION: bool = False
 
@@ -57,7 +58,7 @@ class Settings(BaseSettings):
     NOTIFY_ON_START: bool = True
 
     # Project Settings
-    PROJECT_NAME: str = "kwc_website"
+    PROJECT_NAME: str = "kwc-website"
     PACKAGE_NAME: str = PROJECT_NAME.lower().replace("-", "_").replace(" ", "_")
     PROJECT_DESCRIPTION: str = f"{PROJECT_NAME}"
     VERSION: str = ""

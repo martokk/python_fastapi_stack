@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenosha Welcome Center</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Animate on Scroll Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/static/css/claude/styles.css">
+    <style>
+        /* Volunteer Page Specific Styles */
+
+/* Impact Stats Section */
+.volunteer-impact {
+    padding: 5rem 0;
+}
+
+.impact-card {
+    padding: 2.5rem;
+    border-radius: 1rem;
+    transition: var(--transition);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.impact-card i {
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.impact-card h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+}
+
+.impact-card p {
+    font-size: 1.1rem;
+    color: var(--black);
+    margin: 0;
+}
+
+/* Volunteer Opportunities Section */
+.volunteer-opportunities {
+    padding: 5rem 0;
+}
+
+.opportunity-card {
+    background-color: var(--gold);
+    padding: 2rem;
+    border-radius: 1rem;
+    height: 100%;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.opportunity-card:hover {
+    transform: translateY(-10px);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+}
+
+.opportunity-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.opportunity-card p {
+    color: var(--black);
+    margin-bottom: 1.5rem;
+}
+
+.opportunity-card ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.opportunity-card ul li {
+    color: var(--black);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.opportunity-card ul li i {
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+}
+
+.btn-volunteer {
+    background-color: var(--black);
+    color: var(--gold);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    transition: var(--transition);
+    border: none;
+}
+
+.btn-volunteer:hover {
+    transform: scale(1.05);
+    color: var(--gold);
+}
+
+/* Volunteer Process Section */
+.volunteer-process {
+    padding: 5rem 0;
+}
+
+.process-step {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 1rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background-color: var(--black);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-weight: 600;
+}
+
+.process-step h4 {
+    color: var(--black);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.process-step p {
+    color: var(--black);
+    margin: 0;
+}
+
+/* FAQ Section */
+.volunteer-faq {
+    padding: 5rem 0;
+}
+
+.accordion-item {
+    border: none;
+    margin-bottom: 1rem;
+}
+
+.accordion-button {
+    background-color: var(--gold);
+    color: var(--black);
+    font-weight: 600;
+    border-radius: 0.5rem !important;
+    padding: 1.25rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--gold);
+    color: var(--black);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.accordion-body {
+    background-color: var(--gray);
+    color: var(--black);
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    padding: 1.25rem;
+}
+
+/* CTA Sections */
+.volunteer-cta,
+.volunteer-contact {
+    padding: 5rem 0;
+}
+
+.contact-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Shine Effect */
+.opportunity-card::before,
+.process-step::before,
+.impact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, .3),
+        transparent
+    );
+    transition: .65s;
+}
+
+.opportunity-card:hover::before,
+.process-step:hover::before,
+.impact-card:hover::before {
+    left: 200%;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 991.98px) {
+    .impact-card h3 {
+        font-size: 2rem;
+    }
+
+    .opportunity-card {
+        margin-bottom: 2rem;
+    }
+
+    .process-step {
+        margin-bottom: 2rem;
+    }
+
+    .contact-buttons {
+        flex-direction: column;
+    }
+
+    .contact-buttons .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .volunteer-impact,
+    .volunteer-opportunities,
+    .volunteer-process,
+    .volunteer-faq,
+    .volunteer-cta,
+    .volunteer-contact {
+        padding: 3rem 0;
+    }
+
+    .impact-card {
+        margin-bottom: 2rem;
+    }
+
+    .impact-card h3 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .opportunity-card,
+    .process-step,
+    .impact-card {
+        transition: none;
+    }
+
+    .opportunity-card::before,
+    .process-step::before,
+    .impact-card::before {
+        display: none;
+    }
+}
+    </style>
+</head>
+
+
+<body>
+    <!-- Page Preloader Animation -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+
+    <!-- Top Gold Info Bar -->
+    <div class="gold-bar gold-animation">
+        <div class="container d-flex justify-content-between align-items-center">
+
+            <!-- Social Media Icons -->
+            <div class="social-icons">
+                <a href="#" class="social-icon fs-3"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon fs-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon fs-3"><i class="fab fa-twitter"></i></a>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <a href="#" class="social-icon fs-3"><i class="contact-icon fas fa-phone fs-3"></i></a>
+                <a href="#" class="fs-3"><span> 262-452-0212</span></a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Main Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-lg">
+        <div class="container">
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Logo Container -->
+            <a class="navbar-brand" href="#">
+                <img src="/static/images/logos/KWC - Gold Gradient - Transparent.svg" alt="KWC Logo" class="logo">
+                <img src="/static/images/logos/KWC Flat - Gold Gradient - Transparent.svg" alt="KWC Logo"
+                    class="logo flat">
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-uppercase" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-uppercase" href="#services">Services</a></li>
+                    <li class="nav-item"><a class="nav-link text-uppercase" href="#volunteer">Volunteer</a></li>
+                    <li class="nav-item"><a class="nav-link text-uppercase" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link text-uppercase" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link donate-btn shine gold-animation" href="#donate">Donate</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Hero Message Section -->
+    <div class="hero-message silver-scroll" data-aos="fade-up">
+        <div class="container">
+            <h1 class="display-4 text-center mb-3">Volunteer With Us</h1>
+            <p class="lead text-center">Join our team of dedicated volunteers making a difference in Kenosha.</p>
+        </div>
+    </div>
+
+    <!-- Impact Stats Section -->
+    <section class="volunteer-impact">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="impact-card gold-scroll shadow-lg">
+                        <i class="fas fa-clock fa-3x mb-3"></i>
+                        <h3>120+</h3>
+                        <p>Active Volunteers</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="impact-card gold-scroll shadow-lg">
+                        <i class="fas fa-hands-helping fa-3x mb-3"></i>
+                        <h3>1,000+</h3>
+                        <p>Monthly Volunteer Hours</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="impact-card gold-scroll shadow-lg">
+                        <i class="fas fa-heart fa-3x mb-3"></i>
+                        <h3>5,000+</h3>
+                        <p>Lives Impacted Monthly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volunteer Opportunities Section -->
+    <section class="volunteer-opportunities silver-scroll">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">Current Opportunities</h2>
+
+            <div class="row g-4">
+                <!-- Food Pantry Volunteer -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="opportunity-card shine">
+                        <div class="card-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3>Food Pantry</h3>
+                        <p>Help sort, package, and distribute food to families in need.</p>
+                        <ul>
+                            <li><i class="far fa-clock"></i> Tuesday Afternoons</li>
+                            <li><i class="fas fa-users"></i> Teams Welcome</li>
+                            <li><i class="fas fa-dumbbell"></i> Some Lifting Required</li>
+                        </ul>
+                        <button class="btn btn-volunteer shine">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Breakfast Program Volunteer -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="opportunity-card shine">
+                        <div class="card-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3>Breakfast Program</h3>
+                        <p>Prepare and serve hot breakfast to our community members.</p>
+                        <ul>
+                            <li><i class="far fa-clock"></i> Thursday & Friday Mornings</li>
+                            <li><i class="fas fa-hand-sparkles"></i> Food Handler Card Required</li>
+                            <li><i class="fas fa-heart"></i> Great for Social Volunteers</li>
+                        </ul>
+                        <button class="btn btn-volunteer shine">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Administrative Volunteer -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="opportunity-card shine">
+                        <div class="card-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <h3>Administrative</h3>
+                        <p>Support our mission with administrative and organizational tasks.</p>
+                        <ul>
+                            <li><i class="far fa-clock"></i> Flexible Hours</li>
+                            <li><i class="fas fa-tasks"></i> Office Experience Helpful</li>
+                            <li><i class="fas fa-home"></i> Some Remote Work Possible</li>
+                        </ul>
+                        <button class="btn btn-volunteer shine">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Volunteer Process Section -->
+    <section class="volunteer-process">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">How to Get Started</h2>
+
+            <div class="row">
+                <div class="col-md-3" data-aos="fade-up">
+                    <div class="process-step gold-scroll">
+                        <div class="step-number">1</div>
+                        <h4>Apply Online</h4>
+                        <p>Fill out our volunteer application form</p>
+                    </div>
+                </div>
+                <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="process-step gold-scroll">
+                        <div class="step-number">2</div>
+                        <h4>Orientation</h4>
+                        <p>Attend a volunteer orientation session</p>
+                    </div>
+                </div>
+                <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+                    <div class="process-step gold-scroll">
+                        <div class="step-number">3</div>
+                        <h4>Training</h4>
+                        <p>Complete role-specific training</p>
+                    </div>
+                </div>
+                <div class="col-md-3" data-aos="fade-up" data-aos-delay="600">
+                    <div class="process-step gold-scroll">
+                        <div class="step-number">4</div>
+                        <h4>Start Serving</h4>
+                        <p>Begin making a difference</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="volunteer-cta silver-scroll">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-4" data-aos="fade-up">Ready to Make a Difference?</h2>
+                    <p class="lead mb-4" data-aos="fade-up" data-aos-delay="200">
+                        Join our team of dedicated volunteers and help us serve the Kenosha community.
+                    </p>
+                    <button class="btn donate-now-btn shine" data-aos="fade-up" data-aos-delay="400">
+                        Apply to Volunteer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="volunteer-faq">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">Frequently Asked Questions</h2>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="volunteerFAQ">
+                        <!-- FAQ Item 1 -->
+                        <div class="accordion-item" data-aos="fade-up">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq1">
+                                    What is the minimum time commitment?
+                                </button>
+                            </h3>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#volunteerFAQ">
+                                <div class="accordion-body">
+                                    We ask for a minimum commitment of 4 hours per month. However, we're flexible and can
+                                    work with your schedule.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 2 -->
+                        <div class="accordion-item" data-aos="fade-up">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq2">
+                                    Do I need any special skills?
+                                </button>
+                            </h3>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#volunteerFAQ">
+                                <div class="accordion-body">
+                                    Most volunteer positions don't require special skills - just a willing heart and
+                                    positive attitude. We provide all necessary training.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 3 -->
+                        <div class="accordion-item" data-aos="fade-up">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#faq3">
+                                    Can I volunteer with my group or organization?
+                                </button>
+                            </h3>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#volunteerFAQ">
+                                <div class="accordion-body">
+                                    Yes! We welcome group volunteers. Please contact us to discuss group opportunities and
+                                    scheduling.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="volunteer-contact gold-scroll">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-4" data-aos="fade-up">Questions?</h2>
+                    <p class="lead mb-4" data-aos="fade-up" data-aos-delay="200">
+                        Contact our Volunteer Coordinator for more information.
+                    </p>
+                    <div class="contact-buttons" data-aos="fade-up" data-aos-delay="400">
+                        <a href="tel:262-452-0212" class="btn donate-now-btn shine me-3">
+                            <i class="fas fa-phone me-2"></i>Call Us
+                        </a>
+                        <a href="mailto:volunteer@kenoshawelcomecenter.org" class="btn donate-now-btn shine">
+                            <i class="fas fa-envelope me-2"></i>Email Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container footer-content">
+            <div class="row">
+
+                <!-- Contact Information -->
+                <div class="col-lg-4">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Service Location:<br>2006 60th St. Kenosha, WI 53140</p>
+                    <p><i class="fas fa-envelope"></i> Mailing Address:<br>4623 75th St. STE 4-177 Kenosha, WI 53142</p>
+                    <p><i class="fas fa-phone"></i> <a href="tel:262-452-0212">262-452-0212</a></p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-4">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#volunteer">Volunteer</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+
+                <!-- Hours of Operation -->
+                <div class="col-lg-4">
+                    <h3>Hours of Operation</h3>
+                    <p>Food Pantry: Tuesday 4:00 PM - 5:30 PM</p>
+                    <p>Breakfast & Showers: Thursday & Friday 7:00 AM - 9:15 AM</p>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kenosha Welcome Center. All rights reserved.<br />Grace Welcome Center™ is a registered
+                    trademark of Kenosha Welcome Center, Inc.</p>
+
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top gold-animation">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script type="module" src="/static/js/claude/scripts.js"></script>
+</body>
+
+</html>

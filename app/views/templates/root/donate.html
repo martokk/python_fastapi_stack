@@ -1,0 +1,164 @@
+{% extends "base/base.html" %}
+
+{% block title %}Donate{% endblock %}
+
+{% block content %}
+
+
+<!-- Hero Message Section -->
+<div class="hero-message silver-scroll">
+    <div class="container">
+        <h1 class="display-4 text-center mb-3">Support Our Mission</h1>
+        <p class="lead text-center">Help us make a difference in the Kenosha community.</p>
+    </div>
+</div>
+
+<!-- Online Donation Section -->
+<section class="section section-white">
+    <div class="container">
+        <h2 data-aos="fade-up">Donate Online</h2>
+        <div class="row justify-content-center">
+            <div >
+                <div >
+                    <div class="card card-gold gold-scroll shadow-lg mx-auto" data-aos="fade-up" style="max-width: fit-content; max-height: fit-content;">
+                    <div class="card-body">
+                        <!-- Donorbox Embed -->
+                        <script src="https://donorbox.org/widget.js" paypalExpress="false"></script><iframe
+                            src="https://donorbox.org/embed/kenosha-welcome-center-webpage?default_interval=m" name="donorbox"
+                            allowpaymentrequest="allowpaymentrequest" seamless="seamless" frameborder="0" scrolling="no" height="605px"
+                            width="425px" style="min-width: 320px; max-height:none!important" allow="payment"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Alternative Ways to Donate -->
+<section class="section section-silver">
+    <div class="container">
+        <h2 class="mb-5" data-aos="fade-up">Other Ways to Give</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Mail Donation -->
+            <div class="col">
+                <div class="card card-gold gold-scroll shadow-lg hover-shine h-100" data-aos="fade-up">
+                    <div class="card-body text-center">
+                        <i class="fas fa-envelope mb-4"></i>
+                        <h3>Donate by Mail</h3>
+                        <p>Make checks payable to:<br><strong>Kenosha Welcome Center</strong></p>
+                        <address>
+                            4623 75th Street<br>
+                            STE 4-177<br>
+                            Kenosha, WI 53142
+                        </address>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amazon Wishlist -->
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card card-gold gold-scroll shadow-lg hover-shine h-100" data-aos="fade-up"
+                        data-aos-delay="200">
+                        <div class="card-body text-center">
+                            <i class="fab fa-amazon mb-4"></i>
+                            <h3>Amazon Wishlist</h3>
+                            <p>Purchase and ship needed items directly to us through Amazon</p>
+                            <span class="btn btn-black">View Wishlist</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Direct Donations -->
+            <div class="col">
+                <div class="card card-gold gold-scroll shadow-lg hover-shine h-100" data-aos="fade-up"
+                    data-aos-delay="400">
+                    <div class="card-body text-center">
+                        <i class="fas fa-box-open mb-4"></i>
+                        <h3>Direct Donations</h3>
+                        <p>Drop off items at our location during business hours</p>
+                        <a href="#items-needed" class="btn btn-black">See Items Needed</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Items Needed Section -->
+<section id="items-needed" class="section section-white">
+    <div class="container">
+        <h2 class="mb-5" data-aos="fade-up">Current Needs</h2>
+
+        <div class="row g-4">
+            <!-- Food Pantry Needs -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-silver silver-scroll shadow-lg h-100" data-aos="fade-up">
+                    <div class="card-body">
+                        <i class="fas fa-shopping-basket mb-4"></i>
+                        <h3>Food Pantry</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Canned Vegetables</li>
+                            <li><i class="fas fa-check"></i> Pasta & Rice</li>
+                            <li><i class="fas fa-check"></i> Canned Protein</li>
+                            <li><i class="fas fa-check"></i> Cereal & Oatmeal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakfast Program -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-silver silver-scroll shadow-lg h-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body">
+                        <i class="fas fa-coffee mb-4"></i>
+                        <h3>Breakfast Program</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Coffee & Creamer</li>
+                            <li><i class="fas fa-check"></i> Disposable Plates</li>
+                            <li><i class="fas fa-check"></i> Utensils</li>
+                            <li><i class="fas fa-check"></i> Napkins</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hygiene Items -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-silver silver-scroll shadow-lg h-100" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-body">
+                        <i class="fas fa-shower mb-4"></i>
+                        <h3>Hygiene Items</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Shampoo & Soap</li>
+                            <li><i class="fas fa-check"></i> Toothbrushes</li>
+                            <li><i class="fas fa-check"></i> Deodorant</li>
+                            <li><i class="fas fa-check"></i> Towels</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Office Needs -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-silver silver-scroll shadow-lg h-100" data-aos="fade-up" data-aos-delay="600">
+                    <div class="card-body">
+                        <i class="fas fa-paperclip mb-4"></i>
+                        <h3>Office Needs</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Copy Paper</li>
+                            <li><i class="fas fa-check"></i> Pens & Markers</li>
+                            <li><i class="fas fa-check"></i> Filing Supplies</li>
+                            <li><i class="fas fa-check"></i> Printer Ink</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}

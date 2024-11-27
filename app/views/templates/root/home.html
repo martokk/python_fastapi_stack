@@ -1,156 +1,208 @@
 {% extends "base/base.html" %}
-{% block title %}{{ title }}{% endblock %}
-{% block content_header %}Home (Authenticated){% endblock %}
+
+{% block title %}Home{% endblock %}
 
 {% block content %}
 
-<div class="container my-5">
-    <h1 class="text-center mb-5">kwc_website</h1>
 
-    <p class="lead mb-5">kwc_website: poetry, fastapi, sqlmodel, pydantic, alembic, loguru, crud, telegram,
-        jinja2</p>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">Poetry</h2>
-            <p class="mb-5">Poetry is a dependency management tool for Python that provides a standard format for
-                packaging and
-                distributing Python projects.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-
-        <div class="col-md-6">
-            <h2 class="mb-3">FastAPI</h2>
-            <p class="mb-5">FastAPI is a modern, fast (high-performance) web framework for building APIs with Python
-                3.7+ based
-                on standard Python type hints.</p>
-            <a href="https://fastapi.tiangolo.com/" class="btn btn-primary mb-3">Learn more</a>
-        </div>
+<!-- Hero Message Section -->
+<div class="hero-message silver-scroll">
+    <div class="container">
+        <p class="lead text-center">Helping Kenosha residents thrive through life's toughest challenges.</p>
     </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">SQLModel</h2>
-            <p class="mb-5">SQLModel is an Object-Relational Mapping (ORM) tool for Python that provides a simple way to
-                interact with databases using Python code.</p>
-            <a href="https://sqlmodel.tiangolo.com/" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-
-        <div class="col-md-6">
-            <h2 class="mb-3">Pydantic</h2>
-            <p class="mb-5">Pydantic is a library for data validation and settings management in Python using Python
-                type
-                annotations.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">Alembic migrations</h2>
-            <p class="mb-5">Alembic is a lightweight database migration tool for SQLAlchemy. It provides a clear and
-                concise way to manage database schema changes over time.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn how</a>
-        </div>
-
-        <div class="col-md-6">
-            <h2 class="mb-3">Loguru</h2>
-            <p class="mb-5">Loguru is a Python logging library that provides a flexible, colorful and high-performance
-                logging
-                system.</p>
-            <a href="https://loguru.readthedocs.io/en/stable/" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">CRUD</h2>
-            <p class="mb-5">CRUD is an acronym for Create, Read, Update, and Delete, which are four basic functions that
-                can be
-                performed on a database. This package provides a simple way to handle these functions in a Python
-                application.
-            </p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-        <div class="col-md-6">
-            <h2 class="mb-3">Telegram Notifications</h2>
-            <p class="mb-5">Stay informed about the status of your application with real-time notifications sent
-                directly to your Telegram account with python-telegram-bot</p>
-            <a href="#" class="btn btn-primary mb-3">Setup guide</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">Jinja2</h2>
-            <p class="mb-5">Jinja2 is a modern and designer-friendly templating language for Python, modelled after
-                Django's
-                templates. It is fast, widely used and secure with the optional sandboxed template execution
-                environment.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-        <div class="col-md-6">
-            <h2 class="mb-3">Thunder Client</h2>
-            <p class="mb-5">Thunder Client for VSCode is a lightweight Rest Client for Testing APIs</p>
-            <a href="https://github.com/rangav/thunder-client-support" class="btn btn-primary mb-3">Learn More</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">Docker</h2>
-            <p class="mb-5">Docker is an open platform for developing, shipping, and running applications. It provides a
-                way to
-                automate the deployment of applications inside containers, making it easier to manage and scale
-                applications.
-            </p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-        <div class="col-md-6">
-            <h2 class="mb-3">Makefile</h2>
-            <p class="mb-5">A Makefile is a special file that is used to control the build process of a project. It
-                defines a
-                set of rules that specify how files should be built and organized in a project, and provides a way to
-                automate
-                common build tasks and dependencies.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">PyTest</h2>
-            <p class="mb-5">PyTest is a popular testing framework for Python applications. It provides a simple and
-                flexible way
-                to write tests for functions, classes, and entire applications, and allows for easy test discovery and
-                test
-                reporting.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-
-        <div class="col-md-6">
-            <h2 class="mb-3">Coverage</h2>
-            <p class="mb-5">Coverage is a tool for measuring code coverage of Python programs. It determines which parts
-                of the
-                code have been executed during a test run and reports on the code coverage, helping to identify areas of
-                the
-                code that need more testing or need to be improved.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="mb-3">JWT Auth</h2>
-            <p class="mb-5">JWT Auth is a method of authentication that uses JSON Web Tokens (JWT) to secure the
-                communication
-                between a client and a server. It provides a secure and scalable way to authenticate and authorize users
-                and is
-                widely used in web and mobile applications.</p>
-            <a href="#" class="btn btn-primary mb-3">Learn more</a>
-        </div>
-    </div>
-
 </div>
+
+
+<!-- Services Cards Section -->
+<section class="section section-white" id="services">
+    <div class="container">
+        <h2 data-aos="fade-up">Our Services</h2>
+
+        <!-- Homeless Services Card (Full Width) -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <a href="#" class="text-decoration-none">
+                    <div class="card card-gold gold-scroll shadow-lg hover-shine" data-aos="fade-up">
+                        <div class="card-body">
+                            <h3 class="text-uppercase text-black" data-aos="fade-up">Homeless Services</h3>
+                            <p data-aos="fade-up">Providing comprehensive support and resources to individuals experiencing homelessness</p>
+                            <span class="learn-more" data-aos="fade-up">Learn More →</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Unavailable Services Cards -->
+        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-5 py-2">
+
+            <!-- Food Pantry Card -->
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card card-silver silver-scroll shadow-lg unavailable hover-shine" data-aos="fade-up">
+                        <div class="card-body">
+                            <h3 class="text-uppercase text-black" data-aos="fade-up">Food Pantry</h3>
+                            <div class="unavailable-notice mt-3 silver-scroll" data-aos="fade-up">
+                                <i class="fas fa-exclamation-circle" data-aos="fade-up"></i>
+                                <span data-aos="fade-up">Temporarily Unavailable During Relocation</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Breakfast Service Card -->
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card card-silver silver-scroll hover-shine shadow-lg unavailable" data-aos="fade-up">
+                        <div class="card-body">
+                            <h3 class="text-uppercase text-black" data-aos="fade-up">Breakfast</h3>
+                            <div class="unavailable-notice mt-3 silver-scroll">
+                                <i class="fas fa-exclamation-circle" data-aos="fade-up"></i>
+                                <span data-aos="fade-up">Temporarily Unavailable During Relocation</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Shower Service Card -->
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card card-silver silver-scroll hover-shine shadow-lg unavailable" data-aos="fade-up">
+                        <div class="card-body">
+                            <h3 class="text-uppercase text-black" data-aos="fade-up">Showers</h3>
+                            <div class="unavailable-notice mt-3 silver-scroll" data-aos="fade-up">
+                                <i class="fas fa-exclamation-circle" data-aos="fade-up"></i>
+                                <span data-aos="fade-up">Temporarily Unavailable During Relocation</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Impact Statistics Counter Section -->
+<section class="section section-silver silver-scroll">
+    <div class="container">
+        <h2 data-aos="fade-up">Our Impact (2024)</h2>
+        <div class="row text-center g-4">
+
+            <!-- Food Boxes Counter -->
+            <div class="col-md-3 col-6">
+                <div class="counter" data-aos="fade-up">
+                    <i class="fas fa-box-open"></i>
+                    <div class="counter-value" data-count="9435">0</div>
+                    <h4>Food Boxes</h4>
+                </div>
+            </div>
+
+            <!-- Meals Counter -->
+            <div class="col-md-3 col-6">
+                <div class="counter" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-utensils"></i>
+                    <div class="counter-value" data-count="6781">0</div>
+                    <h4>Meals Served</h4>
+                </div>
+            </div>
+
+            <!-- Showers Counter -->
+            <div class="col-md-3 col-6">
+                <div class="counter" data-aos="fade-up" data-aos-delay="400">
+                    <i class="fas fa-shower"></i>
+                    <div class="counter-value" data-count="744">0</div>
+                    <h4>Showers</h4>
+                </div>
+            </div>
+
+            <!-- Housing Intake Counter -->
+            <div class="col-md-3 col-6">
+                <div class="counter" data-aos="fade-up" data-aos-delay="600">
+                    <i class="fas fa-home"></i>
+                    <div class="counter-value" data-count="30">0</div>
+                    <h4>Housing Intake</h4>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Make a Difference Section -->
+<section class="section section-gold gold-scroll" id="donate">
+    <div class="container">
+        <h2 data-aos="fade-up">Make a Difference</h2>
+
+            <!-- Make a Difference Text -->
+            <div class="container text-center" data-aos="fade-up" >
+                <p class="lead" data-aos="fade-up">Your support helps us continue our mission of serving those in need in our community.</p>
+            </div>
+
+            <!-- Cards Row -->
+            <div class="row row-cols-1 row-cols-lg-3 g-4 mt-4">
+
+
+                <!-- Donate Card -->
+                <div class="col">
+                    <a href="{{ request.url_for('donate') }}" class="text-decoration-none">
+                        <div class="card card-black black-scroll" data-aos="fade-up">
+                            <div class="card-body text-center">
+                                <i class="fas fa-hand-holding-heart mb-4" data-aos="fade-up"></i>
+                                <h3 class="text-gold" data-aos="fade-up">Donate</h3>
+                                <p class="text-white" data-aos="fade-up">Your financial support directly impacts lives and helps sustain our vital community services.</p>
+                                <span class="btn btn-gold gold-shine-animation" data-aos="fade-up">Donate Now</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Wish List Card -->
+                <div class="col">
+                    <a href="{{ request.url_for('services') }}#wishlist" class="text-decoration-none">
+                        <div class="card card-black black-scroll" data-aos="fade-up">
+                            <div class="card-body text-center">
+                                <i class="fas fa-gift mb-4" data-aos="fade-up"></i>
+                                <h3 class="text-gold" data-aos="fade-up">Wish List</h3>
+                                <p class="text-white" data-aos="fade-up">Help provide essential items that make a direct impact on those we serve daily.</p>
+                                <span class="btn btn-gold gold-shine-animation" data-aos="fade-up">View List</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Volunteer Card -->
+                <div class="col">
+                    <a href="{{ request.url_for('volunteer') }}" class="text-decoration-none">
+                        <div class="card card-black black-scroll" data-aos="fade-up" >
+                            <div class="card-body text-center">
+                                <i class="fas fa-users mb-4" data-aos="fade-up"></i>
+                                <h3 class="text-gold" data-aos="fade-up">Volunteer</h3>
+                                <p class="text-white" data-aos="fade-up">Join our team of dedicated volunteers and help make a difference in your community.</p>
+                                <span class="btn btn-gold gold-shine-animation" data-aos="fade-up">Join Us</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+    </div>
+</section>
+
+
+<!-- Location Information Section -->
+{% include 'root/sections/location.html' %}
+
+
+<!-- Social Media and Newsletter Section -->
+{% include '/root/sections/follow_us.html' %}
+
+
+<!-- Contact Us Section -->
+{% include '/root/sections/contact.html' %}
+
 
 {% endblock content %}

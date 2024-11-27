@@ -5,8 +5,6 @@ from pathlib import Path
 import emails
 from emails.template import JinjaTemplate  # type: ignore
 from loguru import logger as _logger
-from telegram import Bot
-from telegram.error import BadRequest
 
 from app import paths
 from app.models.settings import Settings as _Settings
@@ -34,8 +32,7 @@ async def notify(
 
     """
     response = {}
-    if telegram and settings.NOTIFY_TELEGRAM_ENABLED:
-        response["telegram"] = await send_telegram_message(text=text)
+
     if email and settings.NOTIFY_EMAIL_ENABLED:
         response["email"] = send_email(
             email_to=settings.NOTIFY_EMAIL_TO,
@@ -44,34 +41,6 @@ async def notify(
             environment={"name": f"{settings.PROJECT_NAME}"},
         )
     return response
-
-
-async def send_telegram_message(text: str) -> Any:
-    """Sends a message via Telegram using the given text as the message's content.
-    Telegram API token and chat ID must be set before calling this function.
-
-    Args:
-        text (str): The message text to send.
-
-    Returns:
-        Any : the message object
-
-    Raises:
-        ValueError: If the chat with the Telegram bot has not been initialized by the user
-    """
-    if not settings.TELEGRAM_API_TOKEN or settings.TELEGRAM_CHAT_ID == 0:
-        logger.warning("TELEGRAM_API_TOKEN or TELEGRAM_CHAT_ID config variables are not set.")
-        return None
-
-    bot = Bot(token=settings.TELEGRAM_API_TOKEN)
-
-    try:
-        return await bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=text)
-    except BadRequest as e:
-        raise ValueError(
-            "The chat with the Telegram bot has not been first initialized by the user. "
-            "Please start a conversation with the bot before trying to send a message"
-        ) from e
 
 
 def send_email(

@@ -18,8 +18,9 @@
     transition: var(--transition);
     color: var(--gold);
     background: var(--black-gradient-45);
-    animation: shine-animation-keyframes 10s ease infinite;
+    /* animation: shine-animation-keyframes 10s ease infinite; */
     background-size: 200% 200%;
+    background-position: 50% 50%;
 }
 
 .btn-black {
@@ -37,8 +38,9 @@
     transition: var(--transition);
     color: var(--black);
     background: var(--silver-gradient-45);
-    animation: shine-animation-keyframes 10s ease infinite;
+    /* animation: shine-animation-keyframes 10s ease infinite; */
     background-size: 200% 200%;
+    background-position: 50% 50%;
 }
 
 
@@ -55,8 +57,9 @@
     transform: scale(1.1);
     text-decoration: none;
     background: var(--black-gradient-45);
-    animation: shine-animation-keyframes 10s ease infinite;
+    /* animation: shine-animation-keyframes 10s ease infinite; */
     background-size: 200% 200%;
+    background-position: 50% 50%;
 }
 
 .btn-large {

@@ -143,19 +143,3 @@ async def donate(
         "request": request,
     }
     return templates.TemplateResponse("root/donate.html", context=context)
-
-
-@router.get("/about2", response_class=HTMLResponse)
-async def about(
-    request: Request,
-) -> Response:
-    """
-    About page
-
-    Returns:
-        Response: About page
-    """
-    context = {
-        "request": request,
-    }
-    return templates.TemplateResponse("temp/about.html", context=context)

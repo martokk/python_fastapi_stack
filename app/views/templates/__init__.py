@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi.templating import Jinja2Templates
 
 from app import paths
@@ -28,5 +30,5 @@ def get_templates() -> Jinja2Templates:
     templates.env.globals["BASE_DOMAIN"] = settings.BASE_DOMAIN
     templates.env.globals["BASE_URL"] = settings.BASE_URL
     templates.env.globals["VERSION"] = settings.VERSION
-
+    templates.env.globals["current_year"] = datetime.now().year
     return templates

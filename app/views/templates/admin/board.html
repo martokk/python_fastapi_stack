@@ -101,8 +101,19 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block js_scripts %}
 <script>
+// Helper function for error handling
+function handleApiError(error) {
+    console.error('API Error:', error);
+    alert(error.message || 'An error occurred');
+}
+
+// Helper function for delete confirmation
+function confirmDelete(message) {
+    return confirm(message);
+}
+
 // Add new board member
 async function submitBoardForm() {
     const formData = {
@@ -120,11 +131,11 @@ async function submitBoardForm() {
             body: JSON.stringify(formData)
         });
 
-        if (response.ok) {
-            location.reload();
-        } else {
-            throw new Error('Failed to add board member');
+        if (!response.ok) {
+            throw new Error(`Failed to add board member: ${response.statusText}`);
         }
+
+        location.reload();
     } catch (error) {
         handleApiError(error);
     }
@@ -132,15 +143,22 @@ async function submitBoardForm() {
 
 // Edit board member
 async function editBoardMember(memberId) {
-    const response = await fetch(`/admin/board-members/${memberId}`);
-    const member = await response.json();
+    try {
+        const response = await fetch(`/admin/board-members/${memberId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch board member: ${response.statusText}`);
+        }
 
-    document.getElementById('editBoardId').value = member.id;
-    document.getElementById('editName').value = member.name;
-    document.getElementById('editPosition').value = member.position;
-    document.getElementById('editDescription').value = member.description;
+        const member = await response.json();
+        document.getElementById('editBoardId').value = member.id;
+        document.getElementById('editName').value = member.name;
+        document.getElementById('editPosition').value = member.position;
+        document.getElementById('editDescription').value = member.description;
 
-    new bootstrap.Modal(document.getElementById('editBoardModal')).show();
+        new bootstrap.Modal(document.getElementById('editBoardModal')).show();
+    } catch (error) {
+        handleApiError(error);
+    }
 }
 
 async function updateBoardMember() {
@@ -160,11 +178,11 @@ async function updateBoardMember() {
             body: JSON.stringify(formData)
         });
 
-        if (response.ok) {
-            location.reload();
-        } else {
-            throw new Error('Failed to update board member');
+        if (!response.ok) {
+            throw new Error(`Failed to update board member: ${response.statusText}`);
         }
+
+        location.reload();
     } catch (error) {
         handleApiError(error);
     }
@@ -181,11 +199,11 @@ async function deleteBoardMember(memberId) {
             method: 'DELETE'
         });
 
-        if (response.ok) {
-            document.getElementById(`board-${memberId}`).remove();
-        } else {
-            throw new Error('Failed to delete board member');
+        if (!response.ok) {
+            throw new Error(`Failed to delete board member: ${response.statusText}`);
         }
+
+        document.getElementById(`board-${memberId}`).remove();
     } catch (error) {
         handleApiError(error);
     }

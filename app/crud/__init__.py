@@ -1,3 +1,4 @@
+from .board import *
 from .exceptions import *
 from .staff import *
 from .user import *

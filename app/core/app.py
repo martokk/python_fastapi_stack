@@ -56,9 +56,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Content-Security-Policy"] = (
             """
             default-src 'self';
-            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com;
-            script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com;
-            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com https://cdn.quilljs.com;
+            script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com https://cdn.quilljs.com;
+            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.quilljs.com;
             font-src 'self' https://fonts.gstatic.com;
             img-src 'self' data: https://*.googleapis.com https://*.gstatic.com;
             frame-src https://donorbox.org https://www.google.com https://*.google.com;

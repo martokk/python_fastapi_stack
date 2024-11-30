@@ -36,6 +36,19 @@ class BaseCRUD(Generic[ModelType, ModelCreateType, ModelUpdateType]):
         statement = select(self.model)
         return db.exec(statement).all() or []
 
+    async def get_first(self, db: Session) -> ModelType | None:
+        """
+        Get the first record from the table.
+
+        Args:
+            db (Session): The database session.
+
+        Returns:
+            The first record, or None if the table is empty.
+        """
+        statement = select(self.model)
+        return db.exec(statement).first()
+
     async def get(self, *args: BinaryExpression[Any], db: Session, **kwargs: Any) -> ModelType:
         """
         Get a record by its primary key(s).
@@ -136,6 +149,7 @@ class BaseCRUD(Generic[ModelType, ModelCreateType, ModelUpdateType]):
         db: Session,
         *args: BinaryExpression[Any],
         obj_in: ModelUpdateType,
+        db_obj: ModelType | None = None,
         exclude_none: bool = True,
         exclude_unset: bool = True,
         **kwargs: Any,
@@ -147,6 +161,7 @@ class BaseCRUD(Generic[ModelType, ModelCreateType, ModelUpdateType]):
             obj_in (ModelUpdateType): The updated object.
             args (BinaryExpression): Binary expressions to filter by.
             db (Session): The database session.
+            db_obj (ModelType | None): Optional existing database object to update.
             exclude_none (bool): Whether to exclude None values from the update.
             exclude_unset (bool): Whether to exclude unset values from the update.
             kwargs (Any): Keyword arguments to filter by.
@@ -155,14 +170,15 @@ class BaseCRUD(Generic[ModelType, ModelCreateType, ModelUpdateType]):
             The updated object.
 
         Raises:
-            ValueError: If no filters are provided.
+            ValueError: If no filters are provided and no db_obj is passed.
         """
-        if not args and not kwargs:
-            raise ValueError("crud.base.update() Must provide at least one filter")
-        db_obj = await self.get(db=db, *args, **kwargs)
+        if db_obj is None:
+            if not args and not kwargs:
+                raise ValueError("crud.base.update() Must provide at least one filter or db_obj")
+            db_obj = await self.get(db=db, *args, **kwargs)
 
-        obj_in_values = obj_in.dict(exclude_unset=exclude_unset, exclude_none=exclude_none)
-        db_obj_values = db_obj.dict()
+        obj_in_values = obj_in.model_dump(exclude_unset=exclude_unset, exclude_none=exclude_none)
+        db_obj_values = db_obj.model_dump()
         for obj_in_key, obj_in_value in obj_in_values.items():
             if obj_in_value != db_obj_values[obj_in_key]:
                 setattr(db_obj, obj_in_key, obj_in_value)

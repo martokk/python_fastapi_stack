@@ -692,3 +692,96 @@ static/js/
    import { DataTable } from './components/datatable.js';
    DataTable.initialize('userTable');
    ```
+
+### Database Model Patterns
+
+#### 1. Database Dependency Injection
+
+When using database dependency injection with FastAPI's `Depends`, always name the parameter `db`:
+
+```python
+@router.post("/endpoint", response_class=Response)
+async def handler(
+    request: Request,
+    content: str = Form(...),
+    context: dict[str, Any] = Depends(get_admin_context),
+    db: Session = Depends(get_db),  # Always use 'db' as parameter name
+) -> Response:
+    pass
+```
+
+#### 2. Model CRUD Implementation
+
+When a model needs to interact with the database, it should use the CRUD operations pattern. This requires several components:
+
+1. **Model Definition** (`app/models/example.py`):
+```python
+class Example(BaseModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    content: str = Field(default="", description="Content field", nullable=False)
+
+class ExampleCreate(Example):
+    @model_validator(mode="before")
+    @classmethod
+    def set_pre_validation_defaults(cls, values: dict[str, Any]) -> dict[str, Any]:
+        values["id"] = values.get("id", generate_uuid_random())
+        return values
+
+class ExampleUpdate(Example):
+    pass
+
+class ExampleRead(Example):
+    pass
+```
+
+2. **Model Registration** (`app/models/__init__.py`):
+```python
+from .example import *  # Add model to __init__.py
+```
+
+3. **CRUD Implementation** (`app/crud/example.py`):
+```python
+from app import models
+from .base import BaseCRUD
+
+class ExampleCRUD(BaseCRUD[models.Example, models.ExampleCreate, models.ExampleUpdate]):
+    pass
+
+example = ExampleCRUD(model=models.Example)
+```
+
+4. **CRUD Registration** (`app/crud/__init__.py`):
+```python
+from .example import *  # Add CRUD to __init__.py
+```
+
+5. **Usage in Routes**:
+```python
+from app import crud
+from app.models.example import ExampleCreate, ExampleUpdate
+
+# Get first record
+example = await crud.example.get_first(db=db)
+
+# Create new record
+if not example:
+    example = await crud.example.create(
+        db=db,
+        obj_in=ExampleCreate(content=content)
+    )
+
+# Update existing record
+else:
+    example = await crud.example.update(
+        db=db,
+        db_obj=example,
+        obj_in=ExampleUpdate(content=content)
+    )
+```
+
+This pattern ensures:
+- Consistent database operations across the application
+- Type safety through model validation
+- Separation of concerns between models and database operations
+- Reusable CRUD operations through inheritance
+- Proper dependency injection and database session management

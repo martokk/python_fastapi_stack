@@ -5,14 +5,12 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from app import logger, models, settings, version
 from app.api import deps
-from app.api.v1.api import api_router
 from app.core import notify
 from app.db.init_db import init_initial_data
 from app.middleware.error_handler import error_handler_middleware
 from app.paths import STATIC_PATH
-
-# from app.utils.session import setup_session_middleware
-from app.views.router import views_router
+from app.routes.api import api_router
+from app.routes.views import views_router
 
 # Initialize FastAPI App
 app = FastAPI(
@@ -76,7 +74,6 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(SecurityHeadersMiddleware)
 app.middleware("http")(error_handler_middleware)
-# setup_session_middleware(app)
 
 
 @app.on_event("startup")  # type: ignore

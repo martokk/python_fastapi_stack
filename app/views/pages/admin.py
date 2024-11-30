@@ -1,10 +1,11 @@
 from typing import Any, Optional
 
-from fastapi import APIRouter, Depends, Request
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, Form, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlmodel import Session, select
 
 from app.models.admin import UserPermissions
+from app.models.alerts import Alerts
 from app.models.partners import Partner
 from app.models.people import BoardMember, Staff
 from app.models.programs import FAQ, Program
@@ -14,16 +15,16 @@ from app.models.user import User
 from app.models.variables import Variables
 from app.models.wishlist import Wishlist
 from app.utils.templates import get_template_context, templates
-from app.views.deps import get_current_user, get_db
+from app.views.deps import get_current_user_or_raise, get_db
 
 router = APIRouter(
-    dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(get_current_user_or_raise)],
 )
 
 
 async def get_admin_context(
     request: Request,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_or_raise),
     session: Session = Depends(get_db),
 ) -> dict[str, Any]:
     """Get admin template context with user permissions"""
@@ -75,6 +76,44 @@ async def admin_variables(
         session.commit()
 
     context["variables"] = variables
+    return templates.TemplateResponse("admin/variables.html", context)
+
+
+@router.post("/variables", response_class=HTMLResponse)
+async def admin_variables_post(
+    request: Request,
+    phone: str = Form(...),
+    email: str = Form(...),
+    service_address: str = Form(...),
+    mailing_address: str = Form(...),
+    location: str = Form(...),
+    context: dict[str, Any] = Depends(get_admin_context),
+    session: Session = Depends(get_db),
+) -> HTMLResponse:
+    """Update variables"""
+    if not context["user_permissions"].webpage_variables:
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
+    variables = session.exec(select(Variables)).first()
+    if not variables:
+        variables = Variables()
+        session.add(variables)
+
+    variables.phone = phone
+    variables.email = email
+    variables.service_address = service_address
+    variables.mailing_address = mailing_address
+    variables.location = location
+    session.commit()
+
+    # Add success alert
+    alerts = Alerts()
+    alerts.success.append("Variables updated successfully!")
+    context["alerts"] = alerts
+
+    # Add updated variables to context
+    context["variables"] = variables
+
     return templates.TemplateResponse("admin/variables.html", context)
 
 

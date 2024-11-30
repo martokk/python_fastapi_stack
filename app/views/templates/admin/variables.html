@@ -6,7 +6,7 @@
         <h2 class="mb-0">Webpage Variables</h2>
     </div>
     <div class="card-body">
-        <form id="variablesForm" method="POST">
+        <form method="POST">
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number</label>
                 <input type="tel" class="form-control" id="phone" name="phone"
@@ -43,38 +43,4 @@
         </form>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.getElementById('variablesForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const formData = {
-        phone: document.getElementById('phone').value,
-        email: document.getElementById('email').value,
-        service_address: document.getElementById('service_address').value,
-        mailing_address: document.getElementById('mailing_address').value,
-        location: document.getElementById('location').value
-    };
-
-    try {
-        const response = await fetch('/admin/variables', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            alert('Variables updated successfully!');
-        } else {
-            throw new Error('Failed to update variables');
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-});
-</script>
 {% endblock %}

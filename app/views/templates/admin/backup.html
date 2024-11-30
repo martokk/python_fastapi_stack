@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Database Backup{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Database Backup</h2>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            This will create a backup of all database content in JSON format.
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Download Backup</h5>
+                        <p class="card-text">Download a complete backup of all database content.</p>
+                        <button type="button" class="btn btn-primary" onclick="downloadBackup()">
+                            <i class="fas fa-download"></i> Download Backup
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Backup Contents</h5>
+                        <p class="card-text">The backup includes:</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Webpage Variables</li>
+                            <li><i class="fas fa-check text-success"></i> Wish List</li>
+                            <li><i class="fas fa-check text-success"></i> Staff Members</li>
+                            <li><i class="fas fa-check text-success"></i> Board Members</li>
+                            <li><i class="fas fa-check text-success"></i> Statistics</li>
+                            <li><i class="fas fa-check text-success"></i> Timeline</li>
+                            <li><i class="fas fa-check text-success"></i> Partners</li>
+                            <li><i class="fas fa-check text-success"></i> Programs</li>
+                            <li><i class="fas fa-check text-success"></i> FAQ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Note:</strong> File uploads (images) are not included in the database backup.
+                Please ensure you maintain separate backups of uploaded files.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function downloadBackup() {
+    try {
+        const response = await fetch('/admin/backup');
+        if (!response.ok) {
+            throw new Error('Failed to generate backup');
+        }
+
+        const data = await response.json();
+
+        // Create a Blob with the JSON data
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+
+        // Create a download link and trigger it
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const date = new Date().toISOString().split('T')[0];
+        a.href = url;
+        a.download = `mission_backup_${date}.json`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+    } catch (error) {
+        handleApiError(error);
+    }
+}
+</script>
+{% endblock %}

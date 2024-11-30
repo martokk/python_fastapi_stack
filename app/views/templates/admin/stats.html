@@ -1,0 +1,108 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Statistics</h2>
+    </div>
+    <div class="card-body">
+        <form id="statsForm" method="POST">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="number">{{ stats.food_boxes }}</div>
+                        <div class="label">Food Boxes</div>
+                        <div class="mt-3">
+                            <input type="number" class="form-control" id="food_boxes"
+                                   name="food_boxes" value="{{ stats.food_boxes }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="number">{{ stats.meals_served }}</div>
+                        <div class="label">Meals Served</div>
+                        <div class="mt-3">
+                            <input type="number" class="form-control" id="meals_served"
+                                   name="meals_served" value="{{ stats.meals_served }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="number">{{ stats.showers }}</div>
+                        <div class="label">Showers</div>
+                        <div class="mt-3">
+                            <input type="number" class="form-control" id="showers"
+                                   name="showers" value="{{ stats.showers }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="number">{{ stats.housing_intake }}</div>
+                        <div class="label">Housing Intake</div>
+                        <div class="mt-3">
+                            <input type="number" class="form-control" id="housing_intake"
+                                   name="housing_intake" value="{{ stats.housing_intake }}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <div class="number">{{ stats.survival_food_bags }}</div>
+                        <div class="label">Survival Food Bags</div>
+                        <div class="mt-3">
+                            <input type="number" class="form-control" id="survival_food_bags"
+                                   name="survival_food_bags" value="{{ stats.survival_food_bags }}" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Statistics</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('statsForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = {
+        food_boxes: parseInt(document.getElementById('food_boxes').value),
+        meals_served: parseInt(document.getElementById('meals_served').value),
+        showers: parseInt(document.getElementById('showers').value),
+        housing_intake: parseInt(document.getElementById('housing_intake').value),
+        survival_food_bags: parseInt(document.getElementById('survival_food_bags').value)
+    };
+
+    try {
+        const response = await fetch('/admin/stats', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            alert('Statistics updated successfully!');
+            location.reload();
+        } else {
+            throw new Error('Failed to update statistics');
+        }
+    } catch (error) {
+        handleApiError(error);
+    }
+});
+</script>
+{% endblock %}

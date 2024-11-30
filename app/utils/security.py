@@ -2,8 +2,14 @@ from typing import Optional
 
 from datetime import datetime
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
+from fastapi.security import HTTPBearer
+from jose import jwt
+import secrets
 from sqlmodel import Session, select
+from fastapi.responses import JSONResponse
+import time
+from collections import defaultdict
 
 from app.database import get_session
 from app.models.admin import UserPermissions
@@ -73,3 +79,40 @@ def log_failed_login(
     )
     db.add(failed_login)
     db.commit()
+
+
+csrf_token_header = "X-CSRF-Token"
+security = HTTPBearer()
+
+
+def generate_csrf_token() -> str:
+    return secrets.token_urlsafe(32)
+
+
+async def verify_csrf_token(request: Request):
+    csrf_token = request.headers.get(csrf_token_header)
+    session_token = request.session.get("csrf_token")
+
+    if not csrf_token or not session_token or csrf_token != session_token:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid CSRF token")
+
+
+# Simple in-memory rate limiting
+RATE_LIMIT_DURATION = 60  # seconds
+MAX_REQUESTS = 100  # requests per duration
+request_counts = defaultdict(list)
+
+
+async def rate_limit(request: Request):
+    client_ip = request.client.host
+    now = time.time()
+
+    # Clean old requests
+    request_counts[client_ip] = [
+        t for t in request_counts[client_ip] if now - t < RATE_LIMIT_DURATION
+    ]
+
+    if len(request_counts[client_ip]) >= MAX_REQUESTS:
+        return JSONResponse(status_code=429, content={"detail": "Too many requests"})
+
+    request_counts[client_ip].append(now)

@@ -20,7 +20,6 @@
 - Setup Twitter
 
 # After Launch
-- Print.css
 - Create Single Program Pages
     - Food Pantry
         - Guest Application

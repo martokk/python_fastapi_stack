@@ -1,0 +1,84 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Admin Dashboard</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% if user_permissions.webpage_variables %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-cog"></i> Variables
+                        </h5>
+                        <p class="card-text">Manage website contact information and settings.</p>
+                        <a href="{{ url_for('admin_variables') }}" class="btn btn-primary">Manage Variables</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if user_permissions.wish_list %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-list"></i> Wish List
+                        </h5>
+                        <p class="card-text">Edit the organization's wish list.</p>
+                        <a href="{{ url_for('admin_wishlist') }}" class="btn btn-primary">Edit Wish List</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if user_permissions.stats %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-bar"></i> Statistics
+                        </h5>
+                        <p class="card-text">Update organization statistics and metrics.</p>
+                        <a href="{{ url_for('admin_stats') }}" class="btn btn-primary">Manage Stats</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if user_permissions.timeline %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-clock"></i> Timeline
+                        </h5>
+                        <p class="card-text">Manage organization timeline events.</p>
+                        <a href="{{ url_for('admin_timeline') }}" class="btn btn-primary">Manage Timeline</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if user_permissions.faq %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-project-diagram"></i> Programs
+                        </h5>
+                        <p class="card-text">Manage programs and their FAQs.</p>
+                        <a href="{{ url_for('admin_programs') }}" class="btn btn-primary">Manage Programs</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

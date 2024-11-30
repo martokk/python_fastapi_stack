@@ -1,13 +1,13 @@
+from datetime import date as datetime_date
+
 from pydantic import field_validator
-from datetime import date
-from typing import Any
 
 
 class TimelineValidator:
     @field_validator("date")
     @classmethod
-    def validate_date(cls, v: date) -> date:
-        if v > date.today():
+    def validate_date(cls, v: datetime_date) -> datetime_date:
+        if v > datetime_date.today():
             raise ValueError("Date cannot be in the future")
         return v
 

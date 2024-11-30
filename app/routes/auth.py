@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session, select
 
 from app.database import get_session
@@ -40,3 +40,35 @@ async def get_user_permissions(
         "users": permissions.users,
         "faq": permissions.faq,
     }
+
+
+@router.post("/login")
+async def login(
+    request: Request,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    session: Session = Depends(get_session),
+):
+    user = authenticate_user(session, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password"
+        )
+
+    # Create access token
+    access_token = create_access_token(data={"sub": user.username})
+
+    # Get user permissions
+    permissions = session.exec(
+        select(UserPermissions).where(UserPermissions.user_id == user.id)
+    ).first()
+
+    if not permissions:
+        permissions = UserPermissions(user_id=user.id)
+        session.add(permissions)
+        session.commit()
+
+    # Store in session
+    request.session["user"] = user.dict()
+    request.session["permissions"] = permissions.dict()
+
+    return {"access_token": access_token, "token_type": "bearer"}

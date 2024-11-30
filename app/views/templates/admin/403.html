@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Access Denied{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body text-center">
+        <h1 class="display-1 text-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+        </h1>
+        <h2>Access Denied</h2>
+        <p class="lead">You don't have permission to access this page.</p>
+        <a href="/admin" class="btn btn-primary">Return to Admin Home</a>
+    </div>
+</div>
+{% endblock %}

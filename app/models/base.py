@@ -1,11 +1,21 @@
+from typing import ClassVar
+
+from sqlalchemy import MetaData
 from sqlmodel import SQLModel
-from typing import Any
+
+convention = {
+    "ix": "ix_%(column_0_label)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s",
+}
+
+metadata = MetaData(naming_convention=convention)
 
 
 class BaseModel(SQLModel):
-    """Base model that sets table name automatically"""
+    """Base model with metadata configuration"""
 
-    @property
-    def __tablename__(cls) -> str:  # type: ignore
-        """Return lowercase class name as table name."""
-        return cls.__class__.__name__.lower()
+    class Config:
+        arbitrary_types_allowed = True

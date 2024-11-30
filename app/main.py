@@ -1,5 +1,9 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
 from .middleware.error_handler import error_handler_middleware
 from .utils.session import setup_session_middleware
 
@@ -25,3 +29,6 @@ from .routes import admin, auth
 
 app.include_router(admin.router)
 app.include_router(auth.router)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory=os.path.join("app", "views", "static")), name="static")

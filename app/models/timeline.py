@@ -1,14 +1,14 @@
 from typing import Optional
 
-from datetime import date
+from datetime import date as datetime_date
 
 from sqlmodel import Field, SQLModel
 
+from app.models.base import BaseModel
 
-class Timeline(SQLModel, table=True):
-    __tablename__ = "timeline"
 
+class Timeline(BaseModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    date: date = Field(index=True)
-    title: str
-    description: str
+    date: datetime_date = Field(...)
+    title: str = Field(...)
+    description: str = Field(...)

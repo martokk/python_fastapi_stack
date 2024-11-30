@@ -1,12 +1,12 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, List
 
-from pydantic import root_validator
+from pydantic import model_validator
 from sqlmodel import Field, Relationship, SQLModel
 
 from app.core.uuid import generate_uuid_from_string
 
 if TYPE_CHECKING:
-    from app.models.guest import Guest  # pragma: no cover
+    from app.models.admin import UserPermissions  # pragma: no cover
 
 
 class UserBase(SQLModel):
@@ -25,18 +25,18 @@ class UserBase(SQLModel):
 
 class User(UserBase, table=True):
     hashed_password: str = Field(nullable=False)
-    guests: list["Guest"] = Relationship(
-        back_populates="owner",
-        sa_relationship_kwargs={
-            "cascade": "all, delete",
-        },
-    )
+
+    # Relationships - moved from UserBase to avoid SQLAlchemy issues
+    if TYPE_CHECKING:
+        permissions: List["UserPermissions"] = []
+    else:
+        permissions: List["UserPermissions"] = Relationship(back_populates="user")
 
 
 class UserCreate(UserBase):
     hashed_password: str = Field(nullable=False)
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
     @classmethod
     def set_pre_validation_defaults(cls, values: dict[str, Any]) -> dict[str, Any]:
         values["id"] = values.get("id", generate_uuid_from_string(string=values["username"]))

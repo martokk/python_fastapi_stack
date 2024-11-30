@@ -39,7 +39,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
 	<!-- Custom CSS -->
-	{% if not user %}
+	{% if not user and not current_user %}
 		<link rel="stylesheet" href="/static/css/styles.css">
 	{% else %}
 		<link rel="stylesheet" href="/static/css/admin.css">
@@ -63,7 +63,7 @@
 		<div class="loader"></div>
 	</div>
 
-	{% if not user %}
+	{% if not user and not current_user %}
 		<!-- Top Gold Info Bar -->
 		{% include 'base/gold-bar.html' %}
 
@@ -78,7 +78,7 @@
 	{% block content %} {% endblock content %}
 
 	<!-- Footer Section -->
-	{% if not user %}
+	{% if not user and not current_user %}
 		{% include 'base/footer.html' %}
 	{% endif %}
 

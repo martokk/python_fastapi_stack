@@ -62,15 +62,15 @@ async def handle_login(
         db(Session): The database session.
 
     Returns:
-        Response: Redirect to home page after login
+        Response: Redirect to admin page after login
     """
     try:
         tokens = await security.get_tokens_from_username_password(db=db, form_data=form_data)
     except HTTPException as e:
         return templates.TemplateResponse("login/login.html", {"request": request, "error": e})
 
-    # Set the cookie
-    response = RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+    # Set the cookie and redirect to admin
+    response = RedirectResponse("/admin", status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="access_token", value=f"Bearer {tokens.access_token}", httponly=True)
     response.set_cookie(key="refresh_token", value=f"Bearer {tokens.refresh_token}", httponly=True)
 

@@ -17,6 +17,7 @@ TEMPLATES_PATH = VIEWS_PATH / "templates"
 # Data Folder
 LOGS_PATH = DATA_PATH / "logs"
 CACHE_PATH = DATA_PATH / "cache"
+UPLOAD_PATH = DATA_PATH / "uploads"
 
 # Cache Folders
 # GUEST_INFO_CACHE_PATH = CACHE_PATH / "guest_info"

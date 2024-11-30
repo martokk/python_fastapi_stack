@@ -17,6 +17,67 @@ A FastAPI-based web application that serves both as a web interface and API back
 - **Security**: Custom middleware for security headers
 - **Logging**: Loguru
 
+### Template Structure
+
+The application uses a hierarchical template structure with Jinja2:
+
+#### Base Template Blocks
+
+1. **Content Blocks**:
+   - `{% block content %}`: Main content area
+   - `{% block title %}`: Page title
+   - `{% block meta_description %}`: SEO meta description
+   - `{% block meta_keywords %}`: SEO meta keywords
+
+2. **JavaScript Blocks**:
+   - `{% block js_scripts %}`: For page-specific JavaScript code
+   - `{% block js_dependencies %}`: For additional JavaScript dependencies
+
+3. **CSS Blocks**:
+   - `{% block head %}`: Additional head elements
+   - `{% block css %}`: Page-specific CSS
+
+#### Template Inheritance
+
+```html
+{# base/base.html - Root template #}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    {# JavaScript Dependencies #}
+    <script src="/static/js/scripts.js"></script>
+    {% block js_dependencies %}{% endblock %}
+    {% block js_scripts %}{% endblock %}
+</body>
+</html>
+
+{# admin/base.html - Admin template #}
+{% extends "base/base.html" %}
+{% block content %}
+    <div class="admin-container">
+        {% block admin_content %}{% endblock %}
+    </div>
+{% endblock %}
+```
+
+#### Best Practices
+
+1. **JavaScript Placement**:
+   - Use `js_dependencies` for third-party libraries
+   - Use `js_scripts` for page-specific code
+   - Always place scripts at the end of the body
+
+2. **Template Organization**:
+   - Extend from appropriate base template
+   - Use consistent block names
+   - Keep templates DRY with includes
+   - Use proper block inheritance
+
 ### Environment Configuration
 
 The project uses Pydantic-based settings validation:

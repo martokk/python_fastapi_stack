@@ -15,7 +15,13 @@
             {% for staff in staff_members %}
             <div class="col-md-4 mb-4" id="staff-{{ staff.id }}">
                 <div class="card h-100">
+                    {% if staff.photo_url %}
                     <img src="{{ staff.photo_url }}" class="card-img-top" alt="{{ staff.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-user fa-4x text-muted"></i>
+                    </div>
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ staff.name }}</h5>
                         <p class="card-text">{{ staff.position }}</p>
@@ -54,8 +60,8 @@
                         <input type="text" class="form-control" id="position" required>
                     </div>
                     <div class="mb-3">
-                        <label for="photo" class="form-label">Photo</label>
-                        <input type="file" class="form-control" id="photo" accept="image/*" required>
+                        <label for="photo" class="form-label">Photo (optional)</label>
+                        <input type="file" class="form-control" id="photo" accept="image/*">
                         <img id="photoPreview" class="mt-2 img-thumbnail d-none" style="max-height: 200px;">
                     </div>
                 </form>
@@ -103,12 +109,34 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block js_scripts %}
 <script>
+// Helper function for error handling
+function handleApiError(error) {
+    console.error('API Error:', error);
+    alert(error.message || 'An error occurred');
+}
+
+// Helper function for delete confirmation
+function confirmDelete(message) {
+    return confirm(message);
+}
+
+// Helper function for image preview
+function previewImage(input, imgElement) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imgElement.src = e.target.result;
+            imgElement.classList.remove('d-none');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 // Preview image uploads
 document.getElementById('photo').addEventListener('change', function() {
     previewImage(this, document.getElementById('photoPreview'));
-    document.getElementById('photoPreview').classList.remove('d-none');
 });
 
 document.getElementById('editPhoto').addEventListener('change', function() {
@@ -120,10 +148,22 @@ async function submitStaffForm() {
     const formData = new FormData();
     formData.append('name', document.getElementById('name').value);
     formData.append('position', document.getElementById('position').value);
-    formData.append('photo', document.getElementById('photo').files[0]);
+
+    const photoInput = document.getElementById('photo');
+    if (photoInput.files.length > 0) {
+        formData.append('photo', photoInput.files[0]);
+    }
 
     try {
-        const staff = await submitFormWithFiles('/admin/staff', formData);
+        const response = await fetch('/admin/staff', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to add staff member: ${response.statusText}`);
+        }
+
         location.reload();
     } catch (error) {
         handleApiError(error);
@@ -132,15 +172,29 @@ async function submitStaffForm() {
 
 // Edit staff member
 async function editStaff(staffId) {
-    const response = await fetch(`/admin/staff/${staffId}`);
-    const staff = await response.json();
+    try {
+        const response = await fetch(`/admin/staff/${staffId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch staff member: ${response.statusText}`);
+        }
 
-    document.getElementById('editStaffId').value = staff.id;
-    document.getElementById('editName').value = staff.name;
-    document.getElementById('editPosition').value = staff.position;
-    document.getElementById('editPhotoPreview').src = staff.photo_url;
+        const staff = await response.json();
+        document.getElementById('editStaffId').value = staff.id;
+        document.getElementById('editName').value = staff.name;
+        document.getElementById('editPosition').value = staff.position;
 
-    new bootstrap.Modal(document.getElementById('editStaffModal')).show();
+        const previewImg = document.getElementById('editPhotoPreview');
+        if (staff.photo_url) {
+            previewImg.src = staff.photo_url;
+            previewImg.classList.remove('d-none');
+        } else {
+            previewImg.classList.add('d-none');
+        }
+
+        new bootstrap.Modal(document.getElementById('editStaffModal')).show();
+    } catch (error) {
+        handleApiError(error);
+    }
 }
 
 async function updateStaff() {
@@ -155,7 +209,15 @@ async function updateStaff() {
     }
 
     try {
-        const staff = await submitFormWithFiles(`/admin/staff/${staffId}`, formData, 'PUT');
+        const response = await fetch(`/admin/staff/${staffId}`, {
+            method: 'PUT',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update staff member: ${response.statusText}`);
+        }
+
         location.reload();
     } catch (error) {
         handleApiError(error);
@@ -173,11 +235,11 @@ async function deleteStaff(staffId) {
             method: 'DELETE'
         });
 
-        if (response.ok) {
-            document.getElementById(`staff-${staffId}`).remove();
-        } else {
-            throw new Error('Failed to delete staff member');
+        if (!response.ok) {
+            throw new Error(`Failed to delete staff member: ${response.statusText}`);
         }
+
+        document.getElementById(`staff-${staffId}`).remove();
     } catch (error) {
         handleApiError(error);
     }

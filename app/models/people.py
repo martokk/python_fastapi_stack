@@ -3,13 +3,38 @@ from typing import Optional
 from sqlmodel import Field, SQLModel
 
 
+class StaffBase(SQLModel):
+    name: str = Field(index=True)
+    position: str
+    photo_url: str | None = None
+
+
 class Staff(SQLModel, table=True):
     __tablename__ = "staff"
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     position: str
-    photo_url: str
+    photo_url: str | None = None
+
+
+class StaffCreate(SQLModel):
+    name: str
+    position: str
+    photo_url: str | None = None
+
+
+class StaffUpdate(SQLModel):
+    name: str | None = None
+    position: str | None = None
+    photo_url: str | None = None
+
+
+class StaffRead(SQLModel):
+    id: int
+    name: str
+    position: str
+    photo_url: str | None = None
 
 
 class BoardMember(SQLModel, table=True):

@@ -5,6 +5,8 @@ from fastapi.responses import HTMLResponse
 from sqlmodel import Session, select
 
 from app.models.admin import UserPermissions
+from app.models.partners import Partner
+from app.models.people import BoardMember, Staff
 from app.models.programs import FAQ, Program
 from app.models.stats import Stats
 from app.models.timeline import Timeline
@@ -14,7 +16,9 @@ from app.models.wishlist import Wishlist
 from app.utils.templates import get_template_context, templates
 from app.views.deps import get_current_user, get_db
 
-router = APIRouter(tags=["admin"])
+router = APIRouter(
+    dependencies=[Depends(get_current_user)],
+)
 
 
 async def get_admin_context(
@@ -168,3 +172,75 @@ async def admin_faq(
     context["faqs"] = faqs
     context["selected_program"] = program_id
     return templates.TemplateResponse("admin/faq.html", context)
+
+
+@router.get("/staff", response_class=HTMLResponse)
+async def admin_staff(
+    request: Request,
+    context: dict[str, Any] = Depends(get_admin_context),
+    session: Session = Depends(get_db),
+) -> HTMLResponse:
+    """Admin staff page"""
+    if not context["user_permissions"].staff:
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
+    staff = session.exec(select(Staff)).all()
+    context["staff"] = staff
+    return templates.TemplateResponse("admin/staff.html", context)
+
+
+@router.get("/board", response_class=HTMLResponse)
+async def admin_board(
+    request: Request,
+    context: dict[str, Any] = Depends(get_admin_context),
+    session: Session = Depends(get_db),
+) -> HTMLResponse:
+    """Admin board page"""
+    if not context["user_permissions"].board_members:
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
+    board_members = session.exec(select(BoardMember)).all()
+    context["board_members"] = board_members
+    return templates.TemplateResponse("admin/board.html", context)
+
+
+@router.get("/partners", response_class=HTMLResponse)
+async def admin_partners(
+    request: Request,
+    context: dict[str, Any] = Depends(get_admin_context),
+    session: Session = Depends(get_db),
+) -> HTMLResponse:
+    """Admin partners page"""
+    if not context["user_permissions"].partners:
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
+    partners = session.exec(select(Partner)).all()
+    context["partners"] = partners
+    return templates.TemplateResponse("admin/partners.html", context)
+
+
+@router.get("/users", response_class=HTMLResponse)
+async def admin_users(
+    request: Request,
+    context: dict[str, Any] = Depends(get_admin_context),
+    session: Session = Depends(get_db),
+) -> HTMLResponse:
+    """Admin users page"""
+    if not context["user_permissions"].users:
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
+    users = session.exec(select(User)).all()
+    context["users"] = users
+    return templates.TemplateResponse("admin/users.html", context)
+
+
+@router.get("/backup", response_class=HTMLResponse)
+async def admin_backup(
+    request: Request,
+    context: dict[str, Any] = Depends(get_admin_context),
+) -> HTMLResponse:
+    """Admin backup page"""
+    if not context["user_permissions"].users:  # Using users permission for backup
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
+    return templates.TemplateResponse("admin/backup.html", context)

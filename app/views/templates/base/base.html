@@ -59,11 +59,17 @@
 		<div class="loader"></div>
 	</div>
 
-	<!-- Top Gold Info Bar -->
-	{% include 'base/gold-bar.html' %}
+	{% if not user%}
+		<!-- Top Gold Info Bar -->
+		{% include 'base/gold-bar.html' %}
 
-	<!-- Main Navigation Bar -->
-	{% include 'base/navbar.html' %}
+		<!-- Main Navigation Bar -->
+		{% include 'base/navbar.html' %}
+
+	{% else %}
+		<!-- Admin Navigation Bar -->
+		{% include 'admin/navbar.html' %}
+	{% endif %}
 
 	<!-- Main Content Section -->
 	{% block content %} {% endblock content %}

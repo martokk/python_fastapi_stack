@@ -3,17 +3,17 @@
    ========================================================================== */
 
 .text-black {
-    color: var(--black);
+    color: var(--black) !important;
 }
 
 .text-gold {
-    color: var(--gold);
+    color: var(--gold) !important;
 }
 
 .text-white {
-    color: var(--white);
+    color: var(--white) !important;
 }
 
 .text-silver {
-    color: var(--silver);
+    color: var(--silver) !important;
 }

@@ -39,7 +39,11 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
 	<!-- Custom CSS -->
-	<link rel="stylesheet" href="/static/css/styles.css">
+	{% if not user %}
+		<link rel="stylesheet" href="/static/css/styles.css">
+	{% else %}
+		<link rel="stylesheet" href="/static/css/admin.css">
+	{% endif %}
 	<link rel="stylesheet" href="/static/css/print.css" media="print">
 
 	{% block head %}
@@ -59,13 +63,12 @@
 		<div class="loader"></div>
 	</div>
 
-	{% if not user%}
+	{% if not user %}
 		<!-- Top Gold Info Bar -->
 		{% include 'base/gold-bar.html' %}
 
 		<!-- Main Navigation Bar -->
 		{% include 'base/navbar.html' %}
-
 	{% else %}
 		<!-- Admin Navigation Bar -->
 		{% include 'admin/navbar.html' %}
@@ -75,7 +78,9 @@
 	{% block content %} {% endblock content %}
 
 	<!-- Footer Section -->
-	{% include 'base/footer.html' %}
+	{% if not user %}
+		{% include 'base/footer.html' %}
+	{% endif %}
 
 	<!-- Back to Top Button -->
 	<button id="backToTop" class="back-to-top gold-shine-animation">

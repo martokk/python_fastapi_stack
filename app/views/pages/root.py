@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request, Response
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from app import models
 from app.views import deps, templates
@@ -56,13 +56,8 @@ async def root_index_authenticated(
     Returns:
         Response: Home page
     """
-    alerts = models.Alerts().from_cookies(request.cookies)
-    context = {
-        "request": request,
-        "current_user": current_user,
-        "alerts": alerts,
-    }
-    return templates.TemplateResponse("root/home.html", context=context)
+    # redirect to /admin
+    return RedirectResponse(url="/admin")
 
 
 @router.get("/services", response_class=HTMLResponse)

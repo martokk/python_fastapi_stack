@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
-from sqlmodel import Session, select, col
+from sqlmodel import Session, col, select
 
 from app import crud, models
 from app.utils.templates import templates
@@ -30,7 +30,7 @@ async def admin_board(
     session: Session = Depends(get_db),
 ) -> HTMLResponse:
     """Admin board members page"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     board_members = session.exec(
@@ -46,7 +46,7 @@ async def list_board_members(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Get list of board members for order modal"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     board_members = db.exec(
@@ -65,7 +65,7 @@ async def create_board_member(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Create new board member"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     result = db.exec(
@@ -85,7 +85,7 @@ async def get_board_member(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Get board member by ID"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     board_member = await crud.board_member.get(db=db, id=board_member_id)
@@ -110,7 +110,7 @@ async def update_board_member(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Update board member"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     board_member = await crud.board_member.get(db=db, id=board_member_id)
@@ -130,7 +130,7 @@ async def update_board_members_order(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Update board members order"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     try:
@@ -154,7 +154,7 @@ async def delete_board_member(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Delete board member"""
-    if not context["user_permissions"].board_members:
+    if not context["user_permissions"].board_member:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     board_member = await crud.board_member.get(db=db, id=board_member_id)

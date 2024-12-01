@@ -32,15 +32,12 @@
                         <h5 class="card-title">Backup Contents</h5>
                         <p class="card-text">The backup includes:</p>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success"></i> Webpage Variables</li>
-                            <li><i class="fas fa-check text-success"></i> Wish List</li>
-                            <li><i class="fas fa-check text-success"></i> Staff Members</li>
-                            <li><i class="fas fa-check text-success"></i> Board Members</li>
-                            <li><i class="fas fa-check text-success"></i> Statistics</li>
-                            <li><i class="fas fa-check text-success"></i> Timeline</li>
-                            <li><i class="fas fa-check text-success"></i> Partners</li>
-                            <li><i class="fas fa-check text-success"></i> Programs</li>
-                            <li><i class="fas fa-check text-success"></i> FAQ</li>
+                            {% for field in backup_fields %}
+                            <li>
+                                <i class="fas fa-check text-success"></i>
+                                {{ field | replace('_', ' ') | title }}
+                            </li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -58,34 +55,37 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-async function downloadBackup() {
-    try {
-        const response = await fetch('/admin/backup');
-        if (!response.ok) {
-            throw new Error('Failed to generate backup');
+{% block js_scripts %}
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    window.downloadBackup = async function() {
+        try {
+            const response = await fetch('/admin/backup/download');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to generate backup');
+            }
+
+            const data = await response.json();
+
+            // Create a Blob with the JSON data
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+
+            // Create a download link and trigger it
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const date = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `kwc_backup_${date}.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+        } catch (error) {
+            alert(error.message);
         }
-
-        const data = await response.json();
-
-        // Create a Blob with the JSON data
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-
-        // Create a download link and trigger it
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const date = new Date().toISOString().split('T')[0];
-        a.href = url;
-        a.download = `mission_backup_${date}.json`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-
-    } catch (error) {
-        handleApiError(error);
-    }
-}
+    };
+});
 </script>
 {% endblock %}

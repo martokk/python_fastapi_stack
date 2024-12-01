@@ -29,7 +29,7 @@
                 <tbody>
                     {% for faq in faqs %}
                     <tr id="faq-{{ faq.id }}">
-                        <td>{{ faq.program.name }}</td>
+                        <td>{{ faq.programs.name }}</td>
                         <td>{{ faq.question }}</td>
                         <td>{{ faq.answer }}</td>
                         <td>
@@ -268,7 +268,7 @@ async function loadProgramFAQs() {
     if (!programId) return;
 
     try {
-        const response = await fetch(`/admin/faq/program/${programId}/items`);
+        const response = await fetch(`/admin/faq/programs/${programId}/items`);
         if (!response.ok) {
             throw new Error('Failed to fetch FAQs');
         }
@@ -304,7 +304,7 @@ async function saveOrder() {
     }));
 
     try {
-        const response = await fetch(`/admin/faq/program/${programId}/order`, {
+        const response = await fetch(`/admin/faq/programs/${programId}/order`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

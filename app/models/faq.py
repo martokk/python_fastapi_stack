@@ -3,20 +3,20 @@ from typing import TYPE_CHECKING, List, Optional
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from .programs import Program
+    from .programs import Programs
 
 
 class FAQ(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    program_id: Optional[str] = Field(default=None, foreign_key="program.id")
+    program_id: Optional[str] = Field(default=None, foreign_key="programs.id")
     order: int = Field(default=0)
     question: str
     answer: str
 
     if TYPE_CHECKING:
-        program: Optional["Program"] = None
+        programs: Optional["Programs"] = None
     else:
-        program: Optional["Program"] = Relationship(back_populates="faqs")
+        programs: Optional["Programs"] = Relationship(back_populates="faqs")
 
 
 class FAQCreate(SQLModel):

@@ -20,7 +20,7 @@ async def admin_variables(
     session: Session = Depends(get_db),
 ) -> HTMLResponse:
     """Admin variables page"""
-    if not context["user_permissions"].webpage_variables:
+    if not context["user_permissions"].variables:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     variables = session.exec(select(Variables)).first()
@@ -28,8 +28,10 @@ async def admin_variables(
         variables = Variables(
             phone="",
             email="",
-            service_address="",
-            mailing_address="",
+            service_address_1="",
+            service_address_2="",
+            mailing_address_1="",
+            mailing_address_2="",
             location="",
         )
         session.add(variables)
@@ -44,14 +46,16 @@ async def admin_variables_post(
     request: Request,
     phone: str = Form(...),
     email: str = Form(...),
-    service_address: str = Form(...),
-    mailing_address: str = Form(...),
+    service_address_1: str = Form(...),
+    service_address_2: str = Form(""),
+    mailing_address_1: str = Form(...),
+    mailing_address_2: str = Form(""),
     location: str = Form(...),
     context: dict[str, Any] = Depends(get_admin_context),
     session: Session = Depends(get_db),
 ) -> HTMLResponse:
     """Update variables"""
-    if not context["user_permissions"].webpage_variables:
+    if not context["user_permissions"].variables:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     variables = session.exec(select(Variables)).first()
@@ -59,16 +63,20 @@ async def admin_variables_post(
         variables = Variables(
             phone=phone,
             email=email,
-            service_address=service_address,
-            mailing_address=mailing_address,
+            service_address_1=service_address_1,
+            service_address_2=service_address_2,
+            mailing_address_1=mailing_address_1,
+            mailing_address_2=mailing_address_2,
             location=location,
         )
         session.add(variables)
 
     variables.phone = phone
     variables.email = email
-    variables.service_address = service_address
-    variables.mailing_address = mailing_address
+    variables.service_address_1 = service_address_1
+    variables.service_address_2 = service_address_2
+    variables.mailing_address_1 = mailing_address_1
+    variables.mailing_address_2 = mailing_address_2
     variables.location = location
     session.commit()
 

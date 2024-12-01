@@ -59,7 +59,7 @@ async def create_partner(
         logo_url = None
         if logo and logo.filename:
             try:
-                logo_url = await crud.partner.save_photo(logo, name)
+                logo_url = await crud.partners.save_photo(logo, name)
             except Exception as e:
                 raise HTTPException(status_code=400, detail=f"Failed to save logo: {str(e)}")
 
@@ -73,7 +73,7 @@ async def create_partner(
             logo_url=logo_url,
             order=next_order,
         )
-        created_partner = await crud.partner.create(db=db, obj_in=partner)
+        created_partner = await crud.partners.create(db=db, obj_in=partner)
         return JSONResponse({"id": created_partner.id})
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -89,7 +89,7 @@ async def get_partner(
     if not context["user_permissions"].partners:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
-    partner = await crud.partner.get(db=db, id=partner_id)
+    partner = await crud.partners.get(db=db, id=partner_id)
     if not partner:
         raise HTTPException(status_code=404, detail="Partner not found")
 
@@ -118,7 +118,7 @@ async def update_partner(
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     try:
-        partner = await crud.partner.get(db=db, id=partner_id)
+        partner = await crud.partners.get(db=db, id=partner_id)
         if not partner:
             raise HTTPException(status_code=404, detail="Partner not found")
 
@@ -128,14 +128,14 @@ async def update_partner(
             logo_url = None
             if partner.logo_url:
                 try:
-                    await crud.partner.delete_photo(partner.logo_url)
+                    await crud.partners.delete_photo(partner.logo_url)
                 except Exception as e:
                     raise HTTPException(status_code=400, detail=f"Failed to remove logo: {str(e)}")
         elif logo and logo.filename:
             try:
                 if partner.logo_url:
-                    await crud.partner.delete_photo(partner.logo_url)
-                logo_url = await crud.partner.save_photo(logo, name)
+                    await crud.partners.delete_photo(partner.logo_url)
+                logo_url = await crud.partners.save_photo(logo, name)
             except Exception as e:
                 raise HTTPException(status_code=400, detail=f"Failed to update logo: {str(e)}")
 
@@ -148,7 +148,7 @@ async def update_partner(
             url=url,
             logo_url=logo_url,
         )
-        partner = await crud.partner.update(db=db, db_obj=partner, obj_in=partner_update)
+        partner = await crud.partners.update(db=db, db_obj=partner, obj_in=partner_update)
         return JSONResponse({"id": partner.id})
     except HTTPException:
         raise
@@ -168,9 +168,9 @@ async def update_partners_order(
 
     try:
         for update in order_update.updates:
-            partner = await crud.partner.get(db=db, id=update.id)
+            partner = await crud.partners.get(db=db, id=update.id)
             if partner:
-                await crud.partner.update(
+                await crud.partners.update(
                     db=db,
                     db_obj=partner,
                     obj_in=models.PartnerUpdate(order=update.order),
@@ -191,17 +191,17 @@ async def delete_partner(
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     try:
-        partner = await crud.partner.get(db=db, id=partner_id)
+        partner = await crud.partners.get(db=db, id=partner_id)
         if not partner:
             raise HTTPException(status_code=404, detail="Partner not found")
 
         if partner.logo_url:
             try:
-                await crud.partner.delete_photo(partner.logo_url)
+                await crud.partners.delete_photo(partner.logo_url)
             except Exception as e:
                 raise HTTPException(status_code=400, detail=f"Failed to delete logo: {str(e)}")
 
-        await crud.partner.remove(db=db, id=partner_id)
+        await crud.partners.remove(db=db, id=partner_id)
         return JSONResponse({"status": "success"})
     except HTTPException:
         raise

@@ -22,7 +22,7 @@ async def admin_programs(
     if not context["user_permissions"].programs:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
-    programs = await crud.program.get_all(db=db)
+    programs = await crud.programs.get_all(db=db)
     context["programs"] = programs
     return templates.TemplateResponse("admin/programs.html", context)
 
@@ -39,8 +39,8 @@ async def create_program(
 
     try:
         data = await request.json()
-        program_in = models.ProgramCreate(name=data["name"])
-        program = await crud.program.create(db=db, obj_in=program_in)
+        program_in = models.ProgramsCreate(name=data["name"])
+        program = await crud.programs.create(db=db, obj_in=program_in)
         return JSONResponse({"status": "success", "id": program.id})
     except ValueError as e:
         return JSONResponse({"error": str(e)}, status_code=400)
@@ -60,7 +60,7 @@ async def delete_program(
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     try:
-        await crud.program.remove(db=db, id=program_id)
+        await crud.programs.remove(db=db, id=program_id)
         return JSONResponse({"status": "success"})
     except Exception as e:
         return JSONResponse({"error": f"Failed to delete program: {str(e)}"}, status_code=500)
@@ -77,7 +77,7 @@ async def get_program(
     if not context["user_permissions"].programs:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
-    program = await crud.program.get(db=db, id=program_id)
+    program = await crud.programs.get(db=db, id=program_id)
     return JSONResponse(
         {
             "id": program.id,
@@ -99,9 +99,9 @@ async def update_program(
 
     try:
         data = await request.json()
-        program = await crud.program.get(db=db, id=program_id)
-        update_data = models.ProgramUpdate(name=data["name"])  # Changed to direct access
-        updated = await crud.program.update(db=db, db_obj=program, obj_in=update_data)
+        program = await crud.programs.get(db=db, id=program_id)
+        update_data = models.ProgramsUpdate(name=data["name"])  # Changed to direct access
+        updated = await crud.programs.update(db=db, db_obj=program, obj_in=update_data)
 
         return JSONResponse({"status": "success"})
     except ValueError as e:

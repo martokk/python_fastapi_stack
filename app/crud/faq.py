@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import asc, text
+from sqlalchemy import text
 from sqlmodel import Session, select
 
 from app import models
@@ -17,13 +17,13 @@ class FAQCRUD(BaseCRUD[models.FAQ, models.FAQCreate, models.FAQUpdate]):
             select(models.FAQ).where(models.FAQ.program_id == program_id).order_by(text('"order"'))
         )
         if include_program:
-            statement = statement.join(models.Program)
+            statement = statement.join(models.Programs)
         return list(db.exec(statement).all())
 
     async def get_all_ordered(self, db: Session) -> List[models.FAQ]:
         """Get all FAQs ordered by program and then by order field."""
         statement = (
-            select(models.FAQ).join(models.Program).order_by(models.Program.name, text('"order"'))
+            select(models.FAQ).join(models.Programs).order_by(models.Programs.name, text('"order"'))
         )
         return list(db.exec(statement).all())
 

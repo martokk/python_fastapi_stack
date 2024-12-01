@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from .faq import FAQ
 
 
-class ProgramBase(SQLModel):
+class ProgramsBase(SQLModel):
     id: str = Field(
         primary_key=True,
         index=True,
@@ -19,16 +19,16 @@ class ProgramBase(SQLModel):
     name: str = Field(index=True)
 
 
-class Program(ProgramBase, table=True):
+class Programs(ProgramsBase, table=True):
     if TYPE_CHECKING:
         faqs: List["FAQ"] = []
     else:
         faqs: List["FAQ"] = Relationship(
-            back_populates="program", sa_relationship_kwargs={"cascade": "all, delete"}
+            back_populates="programs", sa_relationship_kwargs={"cascade": "all, delete"}
         )
 
 
-class ProgramCreate(ProgramBase):
+class ProgramsCreate(ProgramsBase):
     @model_validator(mode="before")
     @classmethod
     def set_pre_validation_defaults(cls, values: dict[str, Any]) -> dict[str, Any]:
@@ -36,9 +36,9 @@ class ProgramCreate(ProgramBase):
         return values
 
 
-class ProgramUpdate(SQLModel):
+class ProgramsUpdate(ProgramsBase):
     name: Optional[str] = None
 
 
-class ProgramRead(ProgramBase):
+class ProgramsRead(ProgramsBase):
     pass

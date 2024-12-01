@@ -1,4 +1,3 @@
-from .admin import *
 from .alerts import *
 from .base import *
 from .common import *
@@ -13,6 +12,7 @@ from .stats import *
 from .timeline import *
 from .tokens import *
 from .user import *
+from .user_permissions import *
 from .validators import *
 from .variables import *
 from .wishlist import *

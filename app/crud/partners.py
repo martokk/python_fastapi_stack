@@ -1,10 +1,8 @@
 import os
-from pathlib import Path
 
 from fastapi import UploadFile
 
 from app import models
-from app.core.uuid import generate_uuid_random
 from app.paths import UPLOAD_PATH
 
 from .base import BaseCRUD
@@ -44,4 +42,4 @@ class PartnerCRUD(BaseCRUD[models.Partner, models.PartnerCreate, models.PartnerU
             file_path.unlink()
 
 
-partner = PartnerCRUD(model=models.Partner)
+partners = PartnerCRUD(model=models.Partner)

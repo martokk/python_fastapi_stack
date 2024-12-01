@@ -5,7 +5,8 @@ from sqlmodel import Session, SQLModel, select
 
 from app import crud, logger, models, settings
 from app.db.session import engine as _engine
-from app.models.admin import UserPermissions
+from app.models.user_permissions import UserPermissions
+from app.utils.model_utils import get_permission_fields
 
 
 async def create_all(engine: Engine = _engine, sqlmodel_create_all: bool = False) -> None:
@@ -52,28 +53,12 @@ async def init_initial_data(db: Session, **kwargs: Any) -> None:
     if not permissions:
         # Create new permissions with all privileges
         permissions = UserPermissions(
-            user_id=superuser.id,
-            webpage_variables=True,
-            wish_list=True,
-            staff=True,
-            board_members=True,
-            stats=True,
-            timeline=True,
-            partners=True,
-            users=True,
-            faq=True,
+            user_id=superuser.id, **{field: True for field in get_permission_fields()}
         )
         db.add(permissions)
     else:
         # Update existing permissions to ensure all are True
-        permissions.webpage_variables = True
-        permissions.wish_list = True
-        permissions.staff = True
-        permissions.board_members = True
-        permissions.stats = True
-        permissions.timeline = True
-        permissions.partners = True
-        permissions.users = True
-        permissions.faq = True
+        for field in get_permission_fields():
+            setattr(permissions, field, True)
 
     db.commit()

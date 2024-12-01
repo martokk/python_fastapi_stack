@@ -6,6 +6,8 @@
 - Create Wish List Page
 - Create Amazon Wishlist Page
 - Volunteer Application
+    - Submitted Successfully Page
+        - Whats Next?
 - Fix @media layout sizes.
 
 # Before Launch

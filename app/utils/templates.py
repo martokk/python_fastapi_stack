@@ -6,8 +6,8 @@ from fastapi import Depends, Request
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 
-from app.models.admin import UserPermissions
 from app.models.user import User
+from app.models.user_permissions import UserPermissions
 from app.views.deps import get_current_user, get_db
 
 templates = Jinja2Templates(directory=os.path.join("app", "views", "templates"))

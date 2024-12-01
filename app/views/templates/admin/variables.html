@@ -20,15 +20,27 @@
             </div>
 
             <div class="mb-3">
-                <label for="service_address" class="form-label">Service Address</label>
-                <input type="text" class="form-control" id="service_address" name="service_address"
-                       value="{{ variables.service_address }}" required>
+                <label for="service_address_1" class="form-label">Service Address Line 1</label>
+                <input type="text" class="form-control" id="service_address_1" name="service_address_1" 
+                       value="{{ variables.service_address_1 }}" required>
             </div>
 
             <div class="mb-3">
-                <label for="mailing_address" class="form-label">Mailing Address</label>
-                <input type="text" class="form-control" id="mailing_address" name="mailing_address"
-                       value="{{ variables.mailing_address }}" required>
+                <label for="service_address_2" class="form-label">Service Address Line 2</label>
+                <input type="text" class="form-control" id="service_address_2" name="service_address_2" 
+                       value="{{ variables.service_address_2 }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="mailing_address_1" class="form-label">Mailing Address Line 1</label>
+                <input type="text" class="form-control" id="mailing_address_1" name="mailing_address_1" 
+                       value="{{ variables.mailing_address_1 }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="mailing_address_2" class="form-label">Mailing Address Line 2</label>
+                <input type="text" class="form-control" id="mailing_address_2" name="mailing_address_2" 
+                       value="{{ variables.mailing_address_2 }}">
             </div>
 
             <div class="mb-3">
@@ -52,8 +64,10 @@ document.getElementById('variablesForm').addEventListener('submit', async functi
     const formData = {
         phone: document.getElementById('phone').value,
         email: document.getElementById('email').value,
-        service_address: document.getElementById('service_address').value,
-        mailing_address: document.getElementById('mailing_address').value,
+        service_address_1: document.getElementById('service_address_1').value,
+        service_address_2: document.getElementById('service_address_2').value,
+        mailing_address_1: document.getElementById('mailing_address_1').value,
+        mailing_address_2: document.getElementById('mailing_address_2').value,
         location: document.getElementById('location').value
     };
 

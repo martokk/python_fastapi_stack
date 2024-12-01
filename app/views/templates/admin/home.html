@@ -1,166 +1,164 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}KWC Dashboard{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header">
-        <h2 class="mb-0">Dashboard</h2>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            {% if user_permissions.webpage_variables %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-cog"></i> Variables
-                        </h5>
-                        <p class="card-text">Manage website contact information and settings.</p>
-                        <a href="{{ url_for('admin_variables') }}" class="btn btn-primary">Manage Variables</a>
-                    </div>
+<div class="container py-4">
+    <h1>Admin Dashboard</h1>
+    <div class="row g-4">
+        {% if user_permissions.variables %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-cog"></i> Website Variables
+                    </h5>
+                    <p class="card-text">Manage website variables like contact information.</p>
+                    <a href="/admin/variables" class="btn btn-primary">Manage Variables</a>
                 </div>
             </div>
-            {% endif %}
-
-            {% if user_permissions.wish_list %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-list"></i> Wish List
-                        </h5>
-                        <p class="card-text">Edit the organization's wish list.</p>
-                        <a href="{{ url_for('admin_wishlist') }}" class="btn btn-primary">Edit Wish List</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.staff %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-users"></i> Staff
-                        </h5>
-                        <p class="card-text">Manage staff members and their information.</p>
-                        <a href="{{ url_for('admin_staff') }}" class="btn btn-primary">Manage Staff</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.board_members %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-users-cog"></i> Board
-                        </h5>
-                        <p class="card-text">Manage board members and their information.</p>
-                        <a href="{{ url_for('admin_board') }}" class="btn btn-primary">Manage Board</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.stats %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-bar"></i> Statistics
-                        </h5>
-                        <p class="card-text">Update organization statistics and metrics.</p>
-                        <a href="{{ url_for('admin_stats') }}" class="btn btn-primary">Manage Stats</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.timeline %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-clock"></i> Timeline
-                        </h5>
-                        <p class="card-text">Manage organization timeline events.</p>
-                        <a href="{{ url_for('admin_timeline') }}" class="btn btn-primary">Manage Timeline</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.partners %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-handshake"></i> Partners
-                        </h5>
-                        <p class="card-text">Manage organization partners and their information.</p>
-                        <a href="{{ url_for('admin_partners') }}" class="btn btn-primary">Manage Partners</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.users %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-user-cog"></i> Users
-                        </h5>
-                        <p class="card-text">Manage user accounts and permissions.</p>
-                        <a href="{{ url_for('admin_users') }}" class="btn btn-primary">Manage Users</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.faq %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-project-diagram"></i> Programs
-                        </h5>
-                        <p class="card-text">Manage programs and their information.</p>
-                        <a href="{{ url_for('admin_programs') }}" class="btn btn-primary">Manage Programs</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-question-circle"></i> FAQ
-                        </h5>
-                        <p class="card-text">Manage frequently asked questions.</p>
-                        <a href="{{ url_for('admin_faq') }}" class="btn btn-primary">Manage FAQ</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if user_permissions.users %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-download"></i> Backup
-                        </h5>
-                        <p class="card-text">Download database backup.</p>
-                        <a href="{{ url_for('admin_backup') }}" class="btn btn-primary">Database Backup</a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </div>
+        {% endif %}
+
+        {% if user_permissions.wishlist %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-list"></i> Wish List
+                    </h5>
+                    <p class="card-text">Manage the wish list content.</p>
+                    <a href="/admin/wishlist" class="btn btn-primary">Manage Wish List</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.staff %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-users"></i> Staff Members
+                    </h5>
+                    <p class="card-text">Manage staff members.</p>
+                    <a href="/admin/staff" class="btn btn-primary">Manage Staff</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.board_member %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-users-cog"></i> Board Members
+                    </h5>
+                    <p class="card-text">Manage board members.</p>
+                    <a href="/admin/board" class="btn btn-primary">Manage Board Members</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.stats %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-chart-bar"></i> Stats
+                    </h5>
+                    <p class="card-text">Manage statistics.</p>
+                    <a href="/admin/stats" class="btn btn-primary">Manage Stats</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.timeline %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-clock"></i> Timeline
+                    </h5>
+                    <p class="card-text">Manage timeline entries.</p>
+                    <a href="/admin/timeline" class="btn btn-primary">Manage Timeline</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.partners %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-handshake"></i> Partners
+                    </h5>
+                    <p class="card-text">Manage partners.</p>
+                    <a href="/admin/partners" class="btn btn-primary">Manage Partners</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.user %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-cog"></i> Users
+                    </h5>
+                    <p class="card-text">Manage user accounts.</p>
+                    <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.faq %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle"></i> FAQ
+                    </h5>
+                    <p class="card-text">Manage frequently asked questions.</p>
+                    <a href="/admin/faq" class="btn btn-primary">Manage FAQ</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.programs %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-project-diagram"></i> Programs
+                    </h5>
+                    <p class="card-text">Manage programs.</p>
+                    <a href="/admin/programs" class="btn btn-primary">Manage Programs</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if user_permissions.backup %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-download"></i> Backup
+                    </h5>
+                    <p class="card-text">Manage database backups.</p>
+                    <a href="/admin/backup" class="btn btn-primary">Manage Backup</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

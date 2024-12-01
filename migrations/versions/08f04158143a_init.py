@@ -1,8 +1,8 @@
-"""admin
+"""init
 
-Revision ID: afca973b9871
-Revises: 910ce6cb5ac4
-Create Date: 2024-11-29 22:02:26.926167
+Revision ID: 08f04158143a
+Revises: 
+Create Date: 2024-12-01 12:59:19.580291
 
 """
 from alembic import op
@@ -11,8 +11,8 @@ import sqlmodel # added
 
 
 # revision identifiers, used by Alembic.
-revision = 'afca973b9871'
-down_revision = '910ce6cb5ac4'
+revision = '08f04158143a'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -24,39 +24,44 @@ def upgrade() -> None:
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('position', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('order', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('board_members', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_board_members_name'), ['name'], unique=False)
+        batch_op.create_index(batch_op.f('ix_board_members_order'), ['order'], unique=False)
 
     op.create_table('partners',
-    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('url', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('logo_url', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('logo_url', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('order', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('partners', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_partners_name'), ['name'], unique=False)
 
-    op.create_table('program',
-    sa.Column('id', sa.Integer(), nullable=False),
+    op.create_table('programs',
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('program', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_program_name'), ['name'], unique=False)
+    with op.batch_alter_table('programs', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_programs_id'), ['id'], unique=False)
+        batch_op.create_index(batch_op.f('ix_programs_name'), ['name'], unique=False)
 
     op.create_table('staff',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('position', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('photo_url', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('photo_url', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('order', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('staff', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_staff_name'), ['name'], unique=False)
+        batch_op.create_index(batch_op.f('ix_staff_order'), ['order'], unique=False)
 
     op.create_table('stats',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -74,98 +79,96 @@ def upgrade() -> None:
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('user_variables',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('phone', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    op.create_table('user',
+    sa.Column('id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('username', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('service_address', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('mailing_address', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('location', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('full_name', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('is_superuser', sa.Boolean(), nullable=False),
+    sa.Column('hashed_password', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('user_variables', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_user_variables_email'), ['email'], unique=False)
-        batch_op.create_index(batch_op.f('ix_user_variables_phone'), ['phone'], unique=False)
+    with op.batch_alter_table('user', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_user_email'), ['email'], unique=True)
+        batch_op.create_index(batch_op.f('ix_user_id'), ['id'], unique=False)
+        batch_op.create_index(batch_op.f('ix_user_username'), ['username'], unique=False)
 
-    op.create_table('wishlist',
+    op.create_table('variables',
+    sa.Column('phone', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('email', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('service_address_1', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('service_address_2', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('mailing_address_1', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('mailing_address_2', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('location', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('wishlist', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('wishlist',
+    sa.Column('content', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('faq',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('program_id', sa.Integer(), nullable=True),
+    sa.Column('program_id', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
     sa.Column('order', sa.Integer(), nullable=False),
     sa.Column('question', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('answer', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.ForeignKeyConstraint(['program_id'], ['program.id'], ),
+    sa.ForeignKeyConstraint(['program_id'], ['programs.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('userpermissions',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('webpage_variables', sa.Boolean(), nullable=False),
-    sa.Column('wish_list', sa.Boolean(), nullable=False),
+    sa.Column('user_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('variables', sa.Boolean(), nullable=False),
+    sa.Column('wishlist', sa.Boolean(), nullable=False),
     sa.Column('staff', sa.Boolean(), nullable=False),
-    sa.Column('board_members', sa.Boolean(), nullable=False),
+    sa.Column('board_member', sa.Boolean(), nullable=False),
     sa.Column('stats', sa.Boolean(), nullable=False),
     sa.Column('timeline', sa.Boolean(), nullable=False),
     sa.Column('partners', sa.Boolean(), nullable=False),
-    sa.Column('users', sa.Boolean(), nullable=False),
+    sa.Column('user', sa.Boolean(), nullable=False),
     sa.Column('faq', sa.Boolean(), nullable=False),
+    sa.Column('programs', sa.Boolean(), nullable=False),
+    sa.Column('backup', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('user', schema=None) as batch_op:
-        batch_op.alter_column('id',
-               existing_type=sa.VARCHAR(),
-               type_=sa.Integer(),
-               existing_nullable=False,
-               autoincrement=True)
-        batch_op.drop_index('ix_user_id')
-        batch_op.drop_index('ix_user_username')
-        batch_op.create_index(batch_op.f('ix_user_username'), ['username'], unique=True)
-        batch_op.drop_column('full_name')
-
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    with op.batch_alter_table('user', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('full_name', sa.VARCHAR(), nullable=True))
-        batch_op.drop_index(batch_op.f('ix_user_username'))
-        batch_op.create_index('ix_user_username', ['username'], unique=False)
-        batch_op.create_index('ix_user_id', ['id'], unique=False)
-        batch_op.alter_column('id',
-               existing_type=sa.Integer(),
-               type_=sa.VARCHAR(),
-               existing_nullable=False,
-               autoincrement=True)
-
     op.drop_table('userpermissions')
     op.drop_table('faq')
     op.drop_table('wishlist')
-    with op.batch_alter_table('user_variables', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_user_variables_phone'))
-        batch_op.drop_index(batch_op.f('ix_user_variables_email'))
+    op.drop_table('variables')
+    with op.batch_alter_table('user', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_user_username'))
+        batch_op.drop_index(batch_op.f('ix_user_id'))
+        batch_op.drop_index(batch_op.f('ix_user_email'))
 
-    op.drop_table('user_variables')
+    op.drop_table('user')
     op.drop_table('timeline')
     op.drop_table('stats')
     with op.batch_alter_table('staff', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_staff_order'))
         batch_op.drop_index(batch_op.f('ix_staff_name'))
 
     op.drop_table('staff')
-    with op.batch_alter_table('program', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_program_name'))
+    with op.batch_alter_table('programs', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_programs_name'))
+        batch_op.drop_index(batch_op.f('ix_programs_id'))
 
-    op.drop_table('program')
+    op.drop_table('programs')
     with op.batch_alter_table('partners', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_partners_name'))
 
     op.drop_table('partners')
     with op.batch_alter_table('board_members', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_board_members_order'))
         batch_op.drop_index(batch_op.f('ix_board_members_name'))
 
     op.drop_table('board_members')

@@ -21,7 +21,7 @@ async def admin_wishlist(
     db: Session = Depends(get_db),
 ) -> HTMLResponse:
     """Admin wishlist page"""
-    if not context["user_permissions"].wish_list:
+    if not context["user_permissions"].wishlist:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     wishlist = await crud.wishlist.get_first(db=db)
@@ -41,7 +41,7 @@ async def update_wishlist(
     db: Session = Depends(get_db),
 ) -> Response:
     """Update wishlist content"""
-    if not context["user_permissions"].wish_list:
+    if not context["user_permissions"].wishlist:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     wishlist = await crud.wishlist.get_first(db=db)

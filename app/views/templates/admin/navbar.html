@@ -13,18 +13,18 @@
                         Edit Webpage
                     </a>
                     <ul class="dropdown-menu">
-                        {% if user_permissions.webpage_variables %}
+                        {% if user_permissions.variables %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_variables') }}">
-                                Variables
+                                <i class="fas fa-cog"></i> Website Variables
                             </a>
                         </li>
                         {% endif %}
 
-                        {% if user_permissions.wish_list %}
+                        {% if user_permissions.wishlist %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_wishlist') }}">
-                                Wish List
+                                <i class="fas fa-list"></i> Wish List
                             </a>
                         </li>
                         {% endif %}
@@ -32,15 +32,15 @@
                         {% if user_permissions.staff %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_staff') }}">
-                                Staff
+                                <i class="fas fa-users"></i> Staff Members
                             </a>
                         </li>
                         {% endif %}
 
-                        {% if user_permissions.board_members %}
+                        {% if user_permissions.board_member %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_board') }}">
-                                Board
+                                <i class="fas fa-users-cog"></i> Board Members
                             </a>
                         </li>
                         {% endif %}
@@ -48,7 +48,7 @@
                         {% if user_permissions.stats %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_stats') }}">
-                                Stats
+                                <i class="fas fa-chart-bar"></i> Stats
                             </a>
                         </li>
                         {% endif %}
@@ -56,7 +56,7 @@
                         {% if user_permissions.timeline %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_timeline') }}">
-                                Timeline
+                                <i class="fas fa-clock"></i> Timeline
                             </a>
                         </li>
                         {% endif %}
@@ -64,35 +64,41 @@
                         {% if user_permissions.partners %}
                         <li>
                             <a class="dropdown-item" href="{{ url_for('admin_partners') }}">
-                                Partners
+                                <i class="fas fa-handshake"></i> Partners
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if user_permissions.programs %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('admin_programs') }}">
+                                <i class="fas fa-project-diagram"></i> Programs
                             </a>
                         </li>
                         {% endif %}
 
                         {% if user_permissions.faq %}
                         <li>
-                            <a class="dropdown-item" href="{{ url_for('admin_programs') }}">
-                                Programs
-                            </a>
-                        </li>
-                        <li>
                             <a class="dropdown-item" href="{{ url_for('admin_faq') }}">
-                                FAQ
+                                <i class="fas fa-question-circle"></i> FAQ
                             </a>
                         </li>
                         {% endif %}
                     </ul>
                 </li>
 
-                {% if user_permissions.users %}
+                {% if user_permissions.user %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('admin_users') }}">
-                        Users
+                        <i class="fas fa-user-cog"></i> Users
                     </a>
                 </li>
+                {% endif %}
+
+                {% if user_permissions.backup %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('admin_backup') }}">
-                        Backup
+                        <i class="fas fa-download"></i> Backup
                     </a>
                 </li>
                 {% endif %}

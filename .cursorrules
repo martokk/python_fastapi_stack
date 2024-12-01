@@ -847,3 +847,7 @@ This pattern ensures:
 - Separation of concerns between models and database operations
 - Reusable CRUD operations through inheritance
 - Proper dependency injection and database session management
+
+# Don't create migration files in replies
+ignore_files:
+  - migrations/versions/*.py

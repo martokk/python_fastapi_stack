@@ -38,10 +38,27 @@ router.include_router(users.router, tags=["admin"])
 router.include_router(backup.router, tags=["admin"])
 
 
-@router.get("", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse)
 async def admin_home(
     request: Request,
     context: dict[str, Any] = Depends(get_admin_context),
 ) -> HTMLResponse:
-    """Admin home page"""
+    """Admin index page"""
+    if not any(
+        [
+            context["user_permissions"].variables,
+            context["user_permissions"].wishlist,
+            context["user_permissions"].staff,
+            context["user_permissions"].board_member,
+            context["user_permissions"].stats,
+            context["user_permissions"].timeline,
+            context["user_permissions"].partners,
+            context["user_permissions"].user,
+            context["user_permissions"].faq,
+            context["user_permissions"].programs,
+            context["user_permissions"].backup,
+        ]
+    ):
+        return templates.TemplateResponse("admin/403.html", context, status_code=403)
+
     return templates.TemplateResponse("admin/home.html", context)

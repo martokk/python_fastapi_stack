@@ -3,8 +3,8 @@ from typing import Any
 from fastapi import Depends, Request
 from sqlmodel import Session, select
 
-from app.models.admin import UserPermissions
 from app.models.user import User
+from app.models.user_permissions import UserPermissions
 from app.utils.templates import get_template_context
 from app.views.deps import get_current_user_or_raise, get_db
 

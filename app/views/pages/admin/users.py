@@ -20,7 +20,7 @@ async def admin_users(
     db: Session = Depends(get_db),
 ) -> HTMLResponse:
     """Admin users page"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     users = await crud.user.get_non_superusers(db=db)
@@ -38,7 +38,7 @@ async def create_user(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Create a new user"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     try:
@@ -80,7 +80,7 @@ async def get_user(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Get user details"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     user = await crud.user.get(db=db, id=user_id)
@@ -102,7 +102,7 @@ async def update_user(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Update user details"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     data = await request.json()
@@ -128,7 +128,7 @@ async def delete_user(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Delete a user"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     user = await crud.user.get(db=db, id=user_id)
@@ -147,7 +147,7 @@ async def get_user_permissions(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Get user permissions"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     permissions = await crud.user.get_permissions(db=db, user_id=user_id)
@@ -165,7 +165,7 @@ async def update_user_permissions(
     db: Session = Depends(get_db),
 ) -> JSONResponse:
     """Update user permissions"""
-    if not context["user_permissions"].users:
+    if not context["user_permissions"].user:
         return JSONResponse({"error": "Unauthorized"}, status_code=403)
 
     data = await request.json()

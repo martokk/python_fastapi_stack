@@ -6,7 +6,7 @@ from sqlmodel import Field, Relationship, SQLModel
 from app.core.uuid import generate_uuid_from_string
 
 if TYPE_CHECKING:
-    from app.models.admin import UserPermissions  # pragma: no cover
+    from app.models.user_permissions import UserPermissions  # pragma: no cover
 
 
 class UserBase(SQLModel):
@@ -30,7 +30,7 @@ class User(UserBase, table=True):
     if TYPE_CHECKING:
         permissions: List["UserPermissions"] = []
     else:
-        permissions: List["UserPermissions"] = Relationship(back_populates="user")
+        permissions: List["UserPermissions"] = Relationship(back_populates="user_")
 
 
 class UserCreate(UserBase):

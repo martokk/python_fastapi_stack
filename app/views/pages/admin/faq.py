@@ -23,12 +23,12 @@ async def admin_faq(
         return templates.TemplateResponse("admin/403.html", context, status_code=403)
 
     faqs = await crud.faq.get_all_ordered(db=db)
-    programs = await crud.program.get_all(db=db)
+    programs = await crud.programs.get_all(db=db)
     context.update({"faqs": faqs, "programs": programs})
     return templates.TemplateResponse("admin/faq.html", context)
 
 
-@router.get("/faq/program/{program_id}/items")
+@router.get("/faq/programs/{program_id}/items")
 async def get_program_faqs(
     request: Request,
     program_id: str,
@@ -137,7 +137,7 @@ async def delete_faq(
         return JSONResponse({"error": f"Failed to delete FAQ: {str(e)}"}, status_code=500)
 
 
-@router.put("/faq/program/{program_id}/order")
+@router.put("/faq/programs/{program_id}/order")
 async def update_faq_order(
     request: Request,
     program_id: str,

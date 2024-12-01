@@ -1,9 +1,12 @@
-from typing import Any, List, Optional
+from typing import TYPE_CHECKING, Any, List, Optional
 
 from pydantic import model_validator
 from sqlmodel import Field, Relationship, SQLModel
 
 from app.core.uuid import generate_uuid_from_string
+
+if TYPE_CHECKING:
+    from .faq import FAQ
 
 
 class ProgramBase(SQLModel):
@@ -17,10 +20,12 @@ class ProgramBase(SQLModel):
 
 
 class Program(ProgramBase, table=True):
-
-    faqs: List["FAQ"] = Relationship(
-        back_populates="program", sa_relationship_kwargs={"cascade": "all, delete"}
-    )
+    if TYPE_CHECKING:
+        faqs: List["FAQ"] = []
+    else:
+        faqs: List["FAQ"] = Relationship(
+            back_populates="program", sa_relationship_kwargs={"cascade": "all, delete"}
+        )
 
 
 class ProgramCreate(ProgramBase):
@@ -37,14 +42,3 @@ class ProgramUpdate(SQLModel):
 
 class ProgramRead(ProgramBase):
     pass
-
-
-class FAQ(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    program_id: Optional[str] = Field(default=None, foreign_key="program.id")
-    order: int = Field(default=0)
-    question: str
-    answer: str
-
-    # Relationships
-    program: Optional[Program] = Relationship(back_populates="faqs")

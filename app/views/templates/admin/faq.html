@@ -5,27 +5,21 @@
 {% block content %}
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <h2 class="mb-0 me-3">FAQ</h2>
-            <select class="form-select" id="programFilter" style="width: auto;">
-                <option value="">All Programs</option>
-                {% for program in programs %}
-                <option value="{{ program.id }}" {% if selected_program == program.id %}selected{% endif %}>
-                    {{ program.name }}
-                </option>
-                {% endfor %}
-            </select>
+        <h2 class="mb-0">FAQ</h2>
+        <div>
+            <button type="button" class="btn btn-secondary me-2" onclick="showEditOrderModal()">
+                <i class="fas fa-sort"></i> Edit Order
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFAQModal">
+                <i class="fas fa-plus"></i> Add FAQ
+            </button>
         </div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFAQModal">
-            <i class="fas fa-plus"></i> Add FAQ
-        </button>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table" id="faqTable">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Order</th>
                         <th>Program</th>
                         <th>Question</th>
                         <th>Answer</th>
@@ -35,16 +29,15 @@
                 <tbody>
                     {% for faq in faqs %}
                     <tr id="faq-{{ faq.id }}">
-                        <td>{{ faq.order }}</td>
                         <td>{{ faq.program.name }}</td>
                         <td>{{ faq.question }}</td>
                         <td>{{ faq.answer }}</td>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-primary" onclick="editFAQ({{ faq.id }})">
+                                <button class="btn btn-sm btn-primary" onclick="editFAQ('{{ faq.id }}')">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteFAQ({{ faq.id }})">
+                                <button class="btn btn-sm btn-danger" onclick="deleteFAQ('{{ faq.id }}')">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
@@ -70,14 +63,11 @@
                     <div class="mb-3">
                         <label for="program_id" class="form-label">Program</label>
                         <select class="form-select" id="program_id" required>
+                            <option value="">Select Program</option>
                             {% for program in programs %}
                             <option value="{{ program.id }}">{{ program.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="order" class="form-label">Order</label>
-                        <input type="number" class="form-control" id="order" required min="1">
                     </div>
                     <div class="mb-3">
                         <label for="question" class="form-label">Question</label>
@@ -111,14 +101,11 @@
                     <div class="mb-3">
                         <label for="editProgramId" class="form-label">Program</label>
                         <select class="form-select" id="editProgramId" required>
+                            <option value="">Select Program</option>
                             {% for program in programs %}
                             <option value="{{ program.id }}">{{ program.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editOrder" class="form-label">Order</label>
-                        <input type="number" class="form-control" id="editOrder" required min="1">
                     </div>
                     <div class="mb-3">
                         <label for="editQuestion" class="form-label">Question</label>
@@ -137,23 +124,47 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Order Modal -->
+<div class="modal fade" id="editOrderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit FAQ Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="orderProgramId" class="form-label">Select Program</label>
+                    <select class="form-select" id="orderProgramId" onchange="loadProgramFAQs()">
+                        <option value="">Select Program</option>
+                        {% for program in programs %}
+                        <option value="{{ program.id }}">{{ program.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div id="faqOrderList" class="list-group">
+                    <!-- FAQs will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveOrder()">Save Order</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
-{% block extra_js %}
+{% block js_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
-// Program filter
-document.getElementById('programFilter').addEventListener('change', function() {
-    const programId = this.value;
-    window.location.href = programId ? `/admin/faq?program=${programId}` : '/admin/faq';
-});
-
 // Add new FAQ
 async function submitFAQForm() {
     const formData = {
-        program_id: parseInt(document.getElementById('program_id').value),
-        order: parseInt(document.getElementById('order').value),
+        program_id: document.getElementById('program_id').value,
         question: document.getElementById('question').value,
-        answer: document.getElementById('answer').value
+        answer: document.getElementById('answer').value,
     };
 
     try {
@@ -168,34 +179,37 @@ async function submitFAQForm() {
         if (response.ok) {
             location.reload();
         } else {
-            throw new Error('Failed to add FAQ');
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to add FAQ');
         }
     } catch (error) {
-        handleApiError(error);
+        alert(error.message);
     }
 }
 
 // Edit FAQ
 async function editFAQ(faqId) {
-    const response = await fetch(`/admin/faq/${faqId}`);
-    const faq = await response.json();
+    try {
+        const response = await fetch(`/admin/faq/${faqId}`);
+        const faq = await response.json();
 
-    document.getElementById('editFAQId').value = faq.id;
-    document.getElementById('editProgramId').value = faq.program_id;
-    document.getElementById('editOrder').value = faq.order;
-    document.getElementById('editQuestion').value = faq.question;
-    document.getElementById('editAnswer').value = faq.answer;
+        document.getElementById('editFAQId').value = faq.id;
+        document.getElementById('editProgramId').value = faq.program_id;
+        document.getElementById('editQuestion').value = faq.question;
+        document.getElementById('editAnswer').value = faq.answer;
 
-    new bootstrap.Modal(document.getElementById('editFAQModal')).show();
+        new bootstrap.Modal(document.getElementById('editFAQModal')).show();
+    } catch (error) {
+        alert('Failed to load FAQ details');
+    }
 }
 
 async function updateFAQ() {
     const faqId = document.getElementById('editFAQId').value;
     const formData = {
-        program_id: parseInt(document.getElementById('editProgramId').value),
-        order: parseInt(document.getElementById('editOrder').value),
+        program_id: document.getElementById('editProgramId').value,
         question: document.getElementById('editQuestion').value,
-        answer: document.getElementById('editAnswer').value
+        answer: document.getElementById('editAnswer').value,
     };
 
     try {
@@ -210,16 +224,17 @@ async function updateFAQ() {
         if (response.ok) {
             location.reload();
         } else {
-            throw new Error('Failed to update FAQ');
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to update FAQ');
         }
     } catch (error) {
-        handleApiError(error);
+        alert(error.message);
     }
 }
 
 // Delete FAQ
 async function deleteFAQ(faqId) {
-    if (!confirmDelete('Are you sure you want to delete this FAQ?')) {
+    if (!confirm('Are you sure you want to delete this FAQ?')) {
         return;
     }
 
@@ -231,10 +246,80 @@ async function deleteFAQ(faqId) {
         if (response.ok) {
             document.getElementById(`faq-${faqId}`).remove();
         } else {
-            throw new Error('Failed to delete FAQ');
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to delete FAQ');
         }
     } catch (error) {
-        handleApiError(error);
+        alert(error.message);
+    }
+}
+
+// Order management
+let sortable = null;
+
+function showEditOrderModal() {
+    document.getElementById('orderProgramId').value = '';
+    document.getElementById('faqOrderList').innerHTML = '';
+    new bootstrap.Modal(document.getElementById('editOrderModal')).show();
+}
+
+async function loadProgramFAQs() {
+    const programId = document.getElementById('orderProgramId').value;
+    if (!programId) return;
+
+    try {
+        const response = await fetch(`/admin/faq/program/${programId}/items`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch FAQs');
+        }
+
+        const faqs = await response.json();
+
+        const listEl = document.getElementById('faqOrderList');
+        listEl.innerHTML = faqs.map(faq => `
+            <div class="list-group-item" data-id="${faq.id}">
+                <i class="fas fa-grip-vertical me-2"></i>
+                ${faq.question}
+            </div>
+        `).join('');
+
+        if (sortable) sortable.destroy();
+        sortable = new Sortable(listEl, {
+            animation: 150,
+            ghostClass: 'sortable-ghost'
+        });
+    } catch (error) {
+        alert('Failed to load FAQs');
+    }
+}
+
+async function saveOrder() {
+    const programId = document.getElementById('orderProgramId').value;
+    if (!programId) return;
+
+    const items = Array.from(document.getElementById('faqOrderList').children);
+    const orders = items.map((item, index) => ({
+        id: item.dataset.id,
+        order: index
+    }));
+
+    try {
+        const response = await fetch(`/admin/faq/program/${programId}/order`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orders })
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to update order');
+        }
+    } catch (error) {
+        alert(error.message);
     }
 }
 </script>

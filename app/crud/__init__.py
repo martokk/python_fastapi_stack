@@ -1,5 +1,6 @@
 from .board import *
 from .exceptions import *
+from .faq import faq
 from .partners import *
 from .program import *
 from .staff import *

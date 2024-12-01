@@ -2,6 +2,7 @@ from .admin import *
 from .alerts import *
 from .base import *
 from .common import *
+from .faq import *
 from .msg import *
 from .partners import *
 from .people import *

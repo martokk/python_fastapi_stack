@@ -3,10 +3,29 @@ from typing import Optional
 from sqlmodel import Field, SQLModel
 
 
-class Partner(SQLModel, table=True):
+class PartnerBase(SQLModel):
+    name: str = Field(index=True)
+    url: str
+    logo_url: str | None = None
+    order: int = Field(default=0)
+
+
+class Partner(PartnerBase, table=True):
     __tablename__ = "partners"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(index=True)
-    url: str
-    logo_url: str
+
+
+class PartnerCreate(PartnerBase):
+    pass
+
+
+class PartnerUpdate(SQLModel):
+    name: str | None = None
+    url: str | None = None
+    logo_url: str | None = None
+    order: int | None = None
+
+
+class PartnerRead(PartnerBase):
+    id: int

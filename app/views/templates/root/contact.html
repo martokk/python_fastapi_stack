@@ -22,8 +22,8 @@
                     <div class="card-body contact-method-card">
                         <i class="fas fa-phone card-icon"></i>
                         <h3>Call Us</h3>
-                        <p>Available Monday-Friday, 9am-5pm</p>
-                        <a href="tel:262-452-0212" class="btn btn-black black-shine-animation">262-452-0212</a>
+                        <p>Available Monday-Friday, 9am-3pm</p>
+                        <a href="tel:{{ variables.phone }}" class="btn btn-black black-shine-animation">{{ variables.phone }}</a>
                     </div>
                 </div>
             </div>
@@ -34,8 +34,8 @@
                     <div class="card-body contact-method-card">
                         <i class="fas fa-envelope card-icon"></i>
                         <h3>Email Us</h3>
-                        <p>We'll respond within 24 hours</p>
-                        <a href="mailto:info@kenoshawelcomecenter.org" class="btn btn-black black-shine-animation">Email Us</a>
+                        <p>We'll respond within as soon as possible</p>
+                        <a href="mailto:{{ variables.email }}" class="btn btn-black black-shine-animation">Email Us</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                         <i class="fas fa-map-marker-alt card-icon"></i>
                         <h3>Visit Us</h3>
                         <p>Our Service Location</p>
-                        <a href="https://maps.google.com" class="btn btn-black black-shine-animation">2006 60th St</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ variables.service_address|urlencode }}" class="btn btn-black black-shine-animation">{{ variables.service_address_1 }}</a>
                     </div>
                 </div>
             </div>

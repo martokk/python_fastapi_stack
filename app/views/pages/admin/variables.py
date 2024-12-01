@@ -32,7 +32,6 @@ async def admin_variables(
             service_address_2="",
             mailing_address_1="",
             mailing_address_2="",
-            location="",
         )
         session.add(variables)
         session.commit()
@@ -50,7 +49,9 @@ async def admin_variables_post(
     service_address_2: str = Form(""),
     mailing_address_1: str = Form(...),
     mailing_address_2: str = Form(""),
-    location: str = Form(...),
+    kwc_mission: str = Form(...),
+    kwc_vision: str = Form(...),
+    kwc_values: str = Form(...),
     context: dict[str, Any] = Depends(get_admin_context),
     session: Session = Depends(get_db),
 ) -> HTMLResponse:
@@ -67,7 +68,9 @@ async def admin_variables_post(
             service_address_2=service_address_2,
             mailing_address_1=mailing_address_1,
             mailing_address_2=mailing_address_2,
-            location=location,
+            kwc_mission=kwc_mission,
+            kwc_vision=kwc_vision,
+            kwc_values=kwc_values,
         )
         session.add(variables)
 
@@ -77,7 +80,9 @@ async def admin_variables_post(
     variables.service_address_2 = service_address_2
     variables.mailing_address_1 = mailing_address_1
     variables.mailing_address_2 = mailing_address_2
-    variables.location = location
+    variables.kwc_mission = kwc_mission
+    variables.kwc_vision = kwc_vision
+    variables.kwc_values = kwc_values
     session.commit()
 
     # Add success alert

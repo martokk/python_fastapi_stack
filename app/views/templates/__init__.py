@@ -30,6 +30,7 @@ def get_templates() -> Jinja2Templates:
     templates.env.globals["BASE_DOMAIN"] = settings.BASE_DOMAIN
     templates.env.globals["BASE_URL"] = settings.BASE_URL
     templates.env.globals["VERSION"] = settings.VERSION
+    templates.env.globals["GOOGLE_MAPS_API_KEY"] = settings.GOOGLE_MAPS_API_KEY
     templates.env.globals["current_year"] = datetime.now().year
 
     # Override the TemplateResponse to include request state context

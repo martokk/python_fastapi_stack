@@ -62,3 +62,6 @@ class Settings(BaseSettings):
     PACKAGE_NAME: str = PROJECT_NAME.lower().replace("-", "_").replace(" ", "_")
     PROJECT_DESCRIPTION: str = f"{PROJECT_NAME}"
     VERSION: str = ""
+
+    # Google API Keys
+    GOOGLE_MAPS_API_KEY: str = ""

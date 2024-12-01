@@ -10,7 +10,9 @@ class VariablesBase(SQLModel):
     service_address_2: str = Field(default="")
     mailing_address_1: str = Field(default="")
     mailing_address_2: str = Field(default="")
-    location: str = Field(default="")
+    kwc_mission: str = Field(default=" ")
+    kwc_vision: str = Field(default=" ")
+    kwc_values: str = Field(default=" ")
 
     @property
     def service_address(self) -> str:
@@ -42,7 +44,6 @@ class VariablesUpdate(SQLModel):
     service_address_2: Optional[str] = None
     mailing_address_1: Optional[str] = None
     mailing_address_2: Optional[str] = None
-    location: Optional[str] = None
 
 
 class VariablesRead(VariablesBase):

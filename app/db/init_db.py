@@ -62,3 +62,8 @@ async def init_initial_data(db: Session, **kwargs: Any) -> None:
             setattr(permissions, field, True)
 
     db.commit()
+
+    # Create stats
+    stats = await crud.stats.get_first(db=db)
+    if not stats:
+        stats = await crud.stats.create(db=db, obj_in=models.Stats())

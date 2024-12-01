@@ -7,6 +7,8 @@
     </div>
     <div class="card-body">
         <form id="variablesForm" method="POST">
+            <!-- Contact Information -->
+            <h4 class="mb-3">Contact Information</h4>
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number</label>
                 <input type="tel" class="form-control" id="phone" name="phone"
@@ -19,75 +21,53 @@
                        value="{{ variables.email }}" required>
             </div>
 
+            <!-- Service Address -->
+            <h4 class="mb-3 mt-4">Service Address</h4>
             <div class="mb-3">
                 <label for="service_address_1" class="form-label">Service Address Line 1</label>
-                <input type="text" class="form-control" id="service_address_1" name="service_address_1" 
+                <input type="text" class="form-control" id="service_address_1" name="service_address_1"
                        value="{{ variables.service_address_1 }}" required>
             </div>
 
             <div class="mb-3">
                 <label for="service_address_2" class="form-label">Service Address Line 2</label>
-                <input type="text" class="form-control" id="service_address_2" name="service_address_2" 
+                <input type="text" class="form-control" id="service_address_2" name="service_address_2"
                        value="{{ variables.service_address_2 }}">
             </div>
 
+            <!-- Mailing Address -->
+            <h4 class="mb-3 mt-4">Mailing Address</h4>
             <div class="mb-3">
                 <label for="mailing_address_1" class="form-label">Mailing Address Line 1</label>
-                <input type="text" class="form-control" id="mailing_address_1" name="mailing_address_1" 
+                <input type="text" class="form-control" id="mailing_address_1" name="mailing_address_1"
                        value="{{ variables.mailing_address_1 }}" required>
             </div>
 
             <div class="mb-3">
                 <label for="mailing_address_2" class="form-label">Mailing Address Line 2</label>
-                <input type="text" class="form-control" id="mailing_address_2" name="mailing_address_2" 
+                <input type="text" class="form-control" id="mailing_address_2" name="mailing_address_2"
                        value="{{ variables.mailing_address_2 }}">
             </div>
 
+            <!-- Organization Information -->
+            <h4 class="mb-3 mt-4">Organization Information</h4>
             <div class="mb-3">
-                <label for="location" class="form-label">Service Location Coordinates</label>
-                <input type="text" class="form-control" id="location" name="location"
-                       value="{{ variables.location }}" required
-                       placeholder="e.g. 45.5155,-122.6789">
-                <small class="form-text text-muted">Format: latitude,longitude</small>
+                <label for="kwc_mission" class="form-label">KWC Mission</label>
+                <textarea class="form-control" id="kwc_mission" name="kwc_mission" rows="3" required>{{ variables.kwc_mission }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="kwc_vision" class="form-label">KWC Vision</label>
+                <textarea class="form-control" id="kwc_vision" name="kwc_vision" rows="3" required>{{ variables.kwc_vision }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="kwc_values" class="form-label">KWC Values</label>
+                <textarea class="form-control" id="kwc_values" name="kwc_values" rows="3" required>{{ variables.kwc_values }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
     </div>
 </div>
-{% endblock %}
-{% block extra_js %}
-<script>
-document.getElementById('variablesForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const formData = {
-        phone: document.getElementById('phone').value,
-        email: document.getElementById('email').value,
-        service_address_1: document.getElementById('service_address_1').value,
-        service_address_2: document.getElementById('service_address_2').value,
-        mailing_address_1: document.getElementById('mailing_address_1').value,
-        mailing_address_2: document.getElementById('mailing_address_2').value,
-        location: document.getElementById('location').value
-    };
-
-    try {
-        const response = await fetch('/admin/variables', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            alert('Variables updated successfully!');
-        } else {
-            throw new Error('Failed to update variables');
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-});
-</script>
 {% endblock %}

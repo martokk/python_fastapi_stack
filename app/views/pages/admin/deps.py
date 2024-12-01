@@ -15,7 +15,9 @@ async def get_admin_context(
     session: Session = Depends(get_db),
 ) -> dict[str, Any]:
     """Get admin template context with user permissions"""
-    context = await get_template_context(request, current_user, session)
+    context = await get_template_context(
+        request=request, current_user=current_user, session=session
+    )
 
     # Get user permissions
     permissions = session.exec(

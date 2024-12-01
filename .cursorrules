@@ -32,6 +32,7 @@ The application uses a hierarchical template structure with Jinja2:
 2. **JavaScript Blocks**:
    - `{% block js_scripts %}`: For page-specific JavaScript code
    - `{% block js_dependencies %}`: For additional JavaScript dependencies
+   - IMPORTANT: Do not use `{% block extra_js %}`, it does not exist.
 
 3. **CSS Blocks**:
    - `{% block head %}`: Additional head elements

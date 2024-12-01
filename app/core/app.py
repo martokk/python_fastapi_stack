@@ -8,6 +8,7 @@ from app.api import deps
 from app.core import notify
 from app.db.init_db import init_initial_data
 from app.middleware.error_handler import error_handler_middleware
+from app.middleware.template_context import TemplateContextMiddleware
 from app.paths import STATIC_PATH, UPLOAD_PATH
 from app.routes.api import api_router
 from app.routes.views import views_router
@@ -77,6 +78,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(TemplateContextMiddleware)
 app.middleware("http")(error_handler_middleware)
 
 

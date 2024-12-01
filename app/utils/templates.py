@@ -1,6 +1,4 @@
-from typing import Any, Optional
-
-import os
+from typing import Any
 
 from fastapi import Depends, Request
 from fastapi.templating import Jinja2Templates
@@ -8,19 +6,29 @@ from sqlmodel import Session, select
 
 from app.models.user import User
 from app.models.user_permissions import UserPermissions
+from app.models.variables import Variables
 from app.views.deps import get_current_user, get_db
 
-templates = Jinja2Templates(directory=os.path.join("app", "views", "templates"))
+templates = Jinja2Templates(directory="app/views/templates")
 
 
 async def get_template_context(
     request: Request,
-    current_user: User | None = Depends(get_current_user),
-    session: Session = Depends(get_db),
+    session: Session,
+    current_user: User | None = None,
 ) -> dict[str, Any]:
     """Get common template context data"""
+    # Get variables
+    variables = session.exec(select(Variables)).first()
+    if not variables:
+        variables = Variables()
+        session.add(variables)
+        session.commit()
+
+    context = {"request": request, "variables": variables}
+
     if not current_user:
-        return {"request": request}
+        return context
 
     # Get user permissions
     permissions = session.exec(
@@ -30,4 +38,5 @@ async def get_template_context(
     if not permissions:
         permissions = UserPermissions(user_id=current_user.id)
 
-    return {"request": request, "user": current_user, "user_permissions": permissions}
+    context.update({"user": current_user, "user_permissions": permissions})
+    return context

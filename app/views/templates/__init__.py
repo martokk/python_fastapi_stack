@@ -31,4 +31,16 @@ def get_templates() -> Jinja2Templates:
     templates.env.globals["BASE_URL"] = settings.BASE_URL
     templates.env.globals["VERSION"] = settings.VERSION
     templates.env.globals["current_year"] = datetime.now().year
+
+    # Override the TemplateResponse to include request state context
+    original_template_response = templates.TemplateResponse
+
+    def template_response(name, context, *args, **kwargs):
+        request = context.get("request")
+        if request and hasattr(request.state, "template_context"):
+            context.update(request.state.template_context)
+        return original_template_response(name, context, *args, **kwargs)
+
+    templates.TemplateResponse = template_response
+
     return templates

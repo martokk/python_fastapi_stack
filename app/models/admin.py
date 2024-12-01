@@ -20,6 +20,8 @@ class UserPermissions(BaseModel, table=True):
     partners: bool = Field(default=False)
     users: bool = Field(default=False)
     faq: bool = Field(default=False)
+    programs: bool = Field(default=False)
+    backup: bool = Field(default=False)
 
     # Relationship
     if TYPE_CHECKING:

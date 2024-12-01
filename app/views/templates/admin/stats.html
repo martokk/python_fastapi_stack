@@ -3,6 +3,9 @@
 {% block title %}Statistics{% endblock %}
 
 {% block content %}
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+
 <div class="card">
     <div class="card-header">
         <h2 class="mb-0">Statistics</h2>
@@ -66,16 +69,22 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Update Statistics</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Update Statistics</button>
         </form>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block js_dependencies %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}
+
+{% block js_scripts %}
 <script>
 document.getElementById('statsForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    setLoading(submitBtn, true);
 
     const formData = {
         food_boxes: parseInt(document.getElementById('food_boxes').value),
@@ -95,13 +104,16 @@ document.getElementById('statsForm').addEventListener('submit', async function(e
         });
 
         if (response.ok) {
-            alert('Statistics updated successfully!');
+            showToast('Statistics updated successfully!', 'success');
             location.reload();
         } else {
-            throw new Error('Failed to update statistics');
+            const data = await response.json();
+            throw new Error(data.detail || 'Failed to update statistics');
         }
     } catch (error) {
-        handleApiError(error);
+        showToast(error.message, 'danger');
+    } finally {
+        setLoading(submitBtn, false);
     }
 });
 </script>

@@ -1,0 +1,92 @@
+{% extends "admin/base.html" %}
+
+{% block js_dependencies %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}
+
+{% block admin_content %}
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0">Contact Emails</h2>
+            {% if unsent_count > 0 %}
+            <div class="text-danger">{{ unsent_count }} unsent emails</div>
+            {% endif %}
+        </div>
+        <div class="btn-group">
+            <a href="?filter=all" class="btn btn-outline-primary {% if filter == 'all' %}active{% endif %}">All</a>
+            <a href="?filter=sent" class="btn btn-outline-primary {% if filter == 'sent' %}active{% endif %}">Sent</a>
+            <a href="?filter=not_sent" class="btn btn-outline-primary {% if filter == 'not_sent' %}active{% endif %}">Not Sent</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email in emails %}
+                    <tr>
+                        <td>{{ email.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ email.name }}</td>
+                        <td>{{ email.email }}</td>
+                        <td>{{ email.subject }}</td>
+                        <td>{{ email.message }}</td>
+                        <td>
+                            {% if email.sent %}
+                            <span class="badge bg-success">Sent</span>
+                            {% else %}
+                            <span class="badge bg-danger">Not Sent</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not email.sent %}
+                            <button class="btn btn-sm btn-primary" onclick="resendEmail({{ email.id }})">
+                                Resend
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_scripts %}
+<script>
+async function resendEmail(emailId) {
+    try {
+        const response = await fetch(`/admin/contact-emails/${emailId}/resend`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            showToast('Email resent successfully!', 'success');
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentFilter = urlParams.get('filter') || 'all';
+            window.location.href = `/admin/contact-emails?filter=${currentFilter}`;
+        } else {
+            const data = await response.json();
+            throw new Error(data.detail || 'Failed to resend email');
+        }
+    } catch (error) {
+        showToast(error.message, 'danger');
+    }
+}
+</script>
+{% endblock %}

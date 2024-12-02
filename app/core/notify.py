@@ -48,6 +48,8 @@ def send_email(
     subject_template: str = "",
     html_template: str = "",
     environment: dict[str, Any] | None = None,
+    subject: str | None = None,
+    message: str | None = None,
 ) -> Any:
     """
     Sends an email using the provided templates and environment variables.
@@ -58,6 +60,8 @@ def send_email(
         html_template (str): The HTML template. Defaults to "".
         environment (dict[str, Any] | None): The environment variables to use when
             rendering the templates. Defaults to None.
+        subject (str | None): Optional direct subject text. If provided, overrides subject_template.
+        message (str | None): Optional direct message text. If provided, overrides html_template.
 
     Returns:
         Any: The email response.
@@ -69,17 +73,23 @@ def send_email(
     if not settings.EMAILS_ENABLED or email_to is None:
         raise ValueError("Emails are not enabled or email_to is None")
 
+    # Use direct subject/message if provided, otherwise use templates
+    final_subject = subject if subject is not None else subject_template
+    final_html = message if message is not None else html_template
+
     # Build the email
     message = emails.Message(  # type: ignore
-        subject=JinjaTemplate(subject_template),
-        html=JinjaTemplate(html_template),
+        subject=final_subject if subject is not None else JinjaTemplate(final_subject),
+        html=final_html if message is not None else JinjaTemplate(final_html),
         mail_from=(settings.EMAILS_FROM_NAME, settings.EMAILS_FROM_EMAIL),
     )
 
     # Build the SMTP options
-    smtp_options = {"host": settings.SMTP_HOST, "port": settings.SMTP_PORT}
+    smtp_options = {"host": settings.SMTP_HOST, "port": settings.SMTP_PORT, "timeout": 20}
     if settings.SMTP_TLS:
         smtp_options["tls"] = True
+    else:
+        smtp_options["ssl"] = True
     if settings.SMTP_USER:
         smtp_options["user"] = settings.SMTP_USER
     if settings.SMTP_PASSWORD:
@@ -90,7 +100,6 @@ def send_email(
 
     # Send the email
     response = message.send(to=email_to, render=environment, smtp=smtp_options)
-    logger.info(f"send email result: {response}")
     return response
 
 

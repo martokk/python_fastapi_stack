@@ -103,3 +103,14 @@ async def on_startup(db: Session = next(deps.get_db())) -> None:
 # @repeat_every(seconds=120, wait_first=False)
 # async def repeating_task() -> None:
 #     logger.debug("This is a repeating task example that runs every 120 seconds.")
+
+
+# @app.on_event("startup")
+# async def email_on_startup() -> None:
+#     notify.send_email(
+#         email_to="techv76@gmail.com",
+#         subject="Test email2",
+#         message="This is a test email2.",
+#     )
+
+#     logger.debug("Email sent on startup")

@@ -1,4 +1,5 @@
 from .board_member import *
+from .contact_emails import *
 from .exceptions import *
 from .faq import *
 from .partners import *

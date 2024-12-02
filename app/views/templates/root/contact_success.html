@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+
+{% block title %}Message Sent{% endblock %}
+
+{% block content %}
+
+<!-- Hero Message Section -->
+<div class="hero-message silver-scroll">
+    <div class="container">
+        <h2 class="text-center" data-aos="fade-up">Message Sent Successfully</h2>
+        <p class="lead text-center" data-aos="fade-up">Thank you for reaching out to us!</p>
+    </div>
+</div>
+
+<!-- Success Message Section -->
+<section class="section section-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="card card-gold gold-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle fa-4x text-success mb-4"></i>
+                        <h3>Your Message Has Been Received</h3>
+                        <p class="lead mb-4">We will review your message and get back to you as soon as possible.</p>
+                        <div class="mt-4">
+                            <a href="/" class="btn btn-black black-shine-animation me-2">Return Home</a>
+                            <a href="/contact" class="btn btn-black black-shine-animation">Send Another Message</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

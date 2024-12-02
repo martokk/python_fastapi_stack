@@ -146,6 +146,24 @@
         </div>
         {% endif %}
 
+        {% if user_permissions.contact_emails %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body {% if unsent_count %}bg-danger-subtle{% endif %}">
+                    <h5 class="card-title">
+                        <i class="fas fa-envelope"></i> Contact Us Emails
+                    </h5>
+                    {% if unsent_count %}
+                    <p class="card-text text-danger fw-bold">Manage {{ unsent_count }} unsent 'contact us' emails.</p>
+                    {% else %}
+                    <p class="card-text">Manage {{ unsent_count }} unsent 'contact us' emails.</p>
+                    {% endif %}
+                    <a href="/admin/contact-emails" class="btn btn-primary">Manage Emails</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         {% if user_permissions.backup %}
         <div class="col-md-4">
             <div class="card h-100">

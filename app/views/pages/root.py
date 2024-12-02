@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, Request, Response
+from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app import crud, models
+from app.core import notify
 from app.views import deps, templates
 
 router = APIRouter()
@@ -160,6 +161,57 @@ async def contact(
         "request": request,
     }
     return templates.TemplateResponse("root/contact.html", context=context)
+
+
+@router.post("/contact", response_class=HTMLResponse)
+async def contact_post(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(...),
+    message: str = Form(...),
+    db: Session = Depends(deps.get_db),
+) -> Response:
+    """Handle contact form submission"""
+    # Create contact email record
+    contact_email = await crud.contact_email.create(
+        db=db,
+        obj_in=models.ContactEmailCreate(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+        ),
+    )
+
+    # Get admin email from variables
+    variables = db.exec(select(models.Variables)).first()
+    if variables and variables.email:
+        try:
+            # Try to send email
+            response = notify.send_email(
+                email_to=variables.email,
+                subject=subject,
+                message=f"From: {email} <br> Name: {name} <br> Subject: {subject} <br> Message: {message}",
+            )
+
+            # Update sent status if email was sent successfully
+            if response and getattr(response, "status_code", None) == 250:
+                contact_email.sent = True
+                db.commit()
+        except Exception:
+            pass  # Email sending failed, but we'll still show success to user
+
+    # Redirect to success page
+    return templates.TemplateResponse("root/contact_success.html", {"request": request})
+
+
+@router.get("/contact/success", response_class=HTMLResponse)
+async def contact_success(
+    request: Request,
+) -> Response:
+    """Contact success page"""
+    return templates.TemplateResponse("root/contact_success.html", {"request": request})
 
 
 @router.get("/donate", response_class=HTMLResponse)

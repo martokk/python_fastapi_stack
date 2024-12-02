@@ -1,6 +1,7 @@
 from .alerts import *
 from .base import *
 from .common import *
+from .contact_emails import *
 from .faq import *
 from .msg import *
 from .partners import *

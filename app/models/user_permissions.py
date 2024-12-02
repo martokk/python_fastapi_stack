@@ -22,6 +22,7 @@ class UserPermissions(BaseModel, table=True):
     faq: bool = Field(default=False)
     programs: bool = Field(default=False)
     backup: bool = Field(default=False)
+    contact_emails: bool = Field(default=False)
 
     # Relationship
     if TYPE_CHECKING:

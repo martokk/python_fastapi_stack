@@ -1,0 +1,350 @@
+{% extends "admin/base.html" %}
+
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Users</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="fas fa-plus"></i> Add User
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Permissions</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr id="user-row-{{ user.id }}">
+                        <td>{{ user.full_name or '' }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info" onclick="editPermissions('{{ user.id }}')">
+                                <i class="fas fa-key"></i> Manage Permissions
+                            </button>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-primary" onclick="editUser('{{ user.id }}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteUser('{{ user.id }}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="full_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <hr>
+                    <h6>Initial Permissions</h6>
+                    {% for field in permission_fields %}
+                    <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" id="new_{{ field }}" name="permissions">
+                        <label class="form-check-label" for="new_{{ field }}">{{ field | replace('_', ' ') | title }}</label>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitUserForm()">Add User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="editFullName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPassword" class="form-label">New Password (leave blank to keep current)</label>
+                        <input type="password" class="form-control" id="editPassword">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateUser()">Update User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Permissions Modal -->
+<div class="modal fade" id="permissionsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User Permissions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="permissionsForm">
+                    <input type="hidden" id="permissionsUserId">
+                    {% for field in permission_fields %}
+                    <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" id="{{ field }}">
+                        <label class="form-check-label" for="{{ field }}">{{ field | replace('_', ' ') | title }}</label>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updatePermissions()">Update Permissions</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_scripts %}
+<script>
+// Add new user
+async function submitUserForm() {
+    const formData = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        full_name: document.getElementById('full_name').value,
+        password: document.getElementById('password').value,
+        permissions: Object.fromEntries(
+            {{ permission_fields | tojson }}.map(field => [
+                field,
+                document.getElementById('new_' + field).checked
+            ])
+        )
+    };
+
+    try {
+        const response = await fetch('/admin/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            // Clear previous error states
+            ['username', 'email', 'password', 'full_name'].forEach(field => {
+                const input = document.getElementById(field);
+                input.classList.remove('is-invalid');
+                const feedback = input.nextElementSibling;
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.remove();
+                }
+            });
+
+            if (data.field) {
+                // Show field-specific error
+                const input = document.getElementById(data.field);
+                if (input) {
+                    input.classList.add('is-invalid');
+                    const feedback = document.createElement('div');
+                    feedback.className = 'invalid-feedback';
+                    feedback.textContent = data.error;
+                    input.parentNode.appendChild(feedback);
+                }
+            }
+            throw new Error(data.error || 'Failed to add user');
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Edit user
+async function editUser(userId) {
+    try {
+        const response = await fetch(`/admin/users/${userId}`);
+        const user = await response.json();
+
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editEmail').value = user.email;
+        document.getElementById('editFullName').value = user.full_name || '';
+        document.getElementById('editPassword').value = '';
+
+        new bootstrap.Modal(document.getElementById('editUserModal')).show();
+    } catch (error) {
+        alert('Failed to load user details');
+    }
+}
+
+// Update user
+async function updateUser() {
+    const userId = document.getElementById('editUserId').value;
+    const formData = {
+        email: document.getElementById('editEmail').value,
+        full_name: document.getElementById('editFullName').value,
+    };
+
+    const password = document.getElementById('editPassword').value;
+    if (password) {
+        formData.password = password;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to update user');
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Manage permissions
+async function editPermissions(userId) {
+    try {
+        const response = await fetch(`/admin/users/${userId}/permissions`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch permissions');
+        }
+
+        const permissions = await response.json();
+        document.getElementById('permissionsUserId').value = userId;
+
+        // Set checkboxes based on current permissions
+        for (const [key, value] of Object.entries(permissions)) {
+            const checkbox = document.getElementById(key);
+            if (checkbox) {
+                checkbox.checked = value;
+            }
+        }
+
+        new bootstrap.Modal(document.getElementById('permissionsModal')).show();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Update permissions
+async function updatePermissions() {
+    const userId = document.getElementById('permissionsUserId').value;
+    const formData = Object.fromEntries(
+        {{ permission_fields | tojson }}.map(field => [
+            field,
+            document.getElementById(field).checked
+        ])
+    );
+
+    try {
+        const response = await fetch(`/admin/users/${userId}/permissions`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to update permissions');
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Delete user
+async function deleteUser(userId) {
+    if (!confirm('Are you sure you want to delete this user?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            const row = document.getElementById(`user-row-${userId}`);
+            if (row) {
+                row.remove();
+            } else {
+                location.reload();
+            }
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to delete user');
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+}
+</script>
+{% endblock %}

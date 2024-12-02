@@ -12,7 +12,11 @@
 	<!-- Preload Critical Resources -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="preload" href="/static/css/styles.css" as="style">
+	{% if not user and not current_user %}
+		<link rel="preload" href="/static/css/styles.css" as="style">
+	{% else %}
+		<link rel="preload" href="/static/css/admin.css" as="style">
+	{% endif %}
 
 	<!-- SEO Meta Tags -->
 	<meta name="description" content="{% block meta_description %}{{ PROJECT_NAME }}{% endblock %}">
@@ -39,8 +43,12 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
 	<!-- Custom CSS -->
-	<link rel="stylesheet" href="/static/css/styles.css">
-	<link rel="stylesheet" href="/static/css/print.css" media="print">
+	{% if not user and not current_user %}
+		<link rel="stylesheet" href="/static/css/styles.css">
+		<link rel="stylesheet" href="/static/css/print.css" media="print">
+	{% else %}
+		<link rel="stylesheet" href="/static/css/admin.css">
+	{% endif %}
 
 	{% block head %}
 	{% endblock head %}
@@ -59,17 +67,24 @@
 		<div class="loader"></div>
 	</div>
 
-	<!-- Top Gold Info Bar -->
-	{% include 'base/gold-bar.html' %}
+	{% if not user and not current_user %}
+		<!-- Top Gold Info Bar -->
+		{% include 'base/gold-bar.html' %}
 
-	<!-- Main Navigation Bar -->
-	{% include 'base/navbar.html' %}
+		<!-- Main Navigation Bar -->
+		{% include 'base/navbar.html' %}
+	{% else %}
+		<!-- Admin Navigation Bar -->
+		{% include 'admin/navbar.html' %}
+	{% endif %}
 
 	<!-- Main Content Section -->
 	{% block content %} {% endblock content %}
 
 	<!-- Footer Section -->
-	{% include 'base/footer.html' %}
+	{% if not user and not current_user %}
+		{% include 'base/footer.html' %}
+	{% endif %}
 
 	<!-- Back to Top Button -->
 	<button id="backToTop" class="back-to-top gold-shine-animation">
@@ -84,7 +99,17 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
 	<!-- JavaScript Scripts -->
-	<script type="module" src="/static/js/scripts.js"></script>
+
+	{% if not user and not current_user %}
+		<script type="module" src="/static/js/scripts.js"></script>
+		<script type="module" src="/static/js/preloader.js"></script>
+		<script type="module" src="/static/js/counters.js"></script>
+		<script type="module" src="/static/js/donations.js"></script>
+		<script type="module" src="/static/js/forms.js"></script>
+		<script type="module" src="/static/js/navbar.js"></script>
+		<script type="module" src="/static/js/utils.js"></script>
+		<script type="module" src="/static/js/scroll-effect.js"></script>
+	{% endif %}
 
 	<!-- JavaScript Blocks -->
 	{% block js_scripts %}{% endblock js_scripts %}

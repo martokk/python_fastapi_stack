@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">Webpage Variables</h2>
+    </div>
+    <div class="card-body">
+        <form id="variablesForm" method="POST">
+            <!-- Contact Information -->
+            <h4 class="mb-3">Contact Information</h4>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone"
+                       value="{{ variables.phone }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email"
+                       value="{{ variables.email }}" required>
+            </div>
+
+            <!-- Service Address -->
+            <h4 class="mb-3 mt-4">Service Address</h4>
+            <div class="mb-3">
+                <label for="service_address_1" class="form-label">Service Address Line 1</label>
+                <input type="text" class="form-control" id="service_address_1" name="service_address_1"
+                       value="{{ variables.service_address_1 }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="service_address_2" class="form-label">Service Address Line 2</label>
+                <input type="text" class="form-control" id="service_address_2" name="service_address_2"
+                       value="{{ variables.service_address_2 }}">
+            </div>
+
+            <!-- Mailing Address -->
+            <h4 class="mb-3 mt-4">Mailing Address</h4>
+            <div class="mb-3">
+                <label for="mailing_address_1" class="form-label">Mailing Address Line 1</label>
+                <input type="text" class="form-control" id="mailing_address_1" name="mailing_address_1"
+                       value="{{ variables.mailing_address_1 }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="mailing_address_2" class="form-label">Mailing Address Line 2</label>
+                <input type="text" class="form-control" id="mailing_address_2" name="mailing_address_2"
+                       value="{{ variables.mailing_address_2 }}">
+            </div>
+
+            <!-- Organization Information -->
+            <h4 class="mb-3 mt-4">Organization Information</h4>
+            <div class="mb-3">
+                <label for="kwc_mission" class="form-label">KWC Mission</label>
+                <textarea class="form-control" id="kwc_mission" name="kwc_mission" rows="3" required>{{ variables.kwc_mission }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="kwc_vision" class="form-label">KWC Vision</label>
+                <textarea class="form-control" id="kwc_vision" name="kwc_vision" rows="3" required>{{ variables.kwc_vision }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="kwc_values" class="form-label">KWC Values</label>
+                <textarea class="form-control" id="kwc_values" name="kwc_values" rows="3" required>{{ variables.kwc_values }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -21,7 +21,7 @@
                 <div class="card card-black black-scroll">
                     <div class="card-body">
                         <h3 class="text-gold">Our Mission</h3>
-                        <p class="text-white">To provide friendship, food assistance, meals, showers, and emergency clothing to economically disadvantaged individuals and families residing in Kenosha County, Wisconsin.</p>
+                        <p class="text-white">{{ variables.kwc_mission }}</p>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <div class="card card-black black-scroll">
                     <div class="card-body">
                         <h3 class="text-gold">Our Vision</h3>
-                        <p class="text-white">A Kenosha community where every individual has access to essential resources and support for a dignified life.</p>
+                        <p class="text-white">{{ variables.kwc_vision }}</p>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 <div class="card card-black black-scroll">
                     <div class="card-body">
                         <h3 class="text-gold">Our Values</h3>
-                        <p class="text-white">Dignity, Compassion, Community, Service, and Inclusivity guide everything we do.</p>
+                        <p class="text-white">{{ variables.kwc_values }}</p>
                     </div>
                 </div>
             </div>
@@ -50,58 +50,21 @@
     <div class="container">
         <h2 class="text-center mb-5" data-aos="fade-up">KWC Staff</h2>
         <div class="row g-4">
-            <div class="col-lg-3 col-md-6" data-aos="fade-up">
+            {% for member in staff_members|sort(attribute='order') %}
+            <div class="col-lg-3 col-md-6" data-aos="fade-up"{% if not loop.first %} data-aos-delay="{{ loop.index0 * 200 }}"{% endif %}>
                 <div class="card card-black black-scroll">
                     <div class="card-body team-card">
                         <div class="team-photo">
-                            <img src="/static/images/photos/staff/denise.jpg" alt="Team Member">
+                            <img src="{{ member.photo_url }}" alt="{{ member.name }}">
                         </div>
                         <div class="team-info">
-                            <h4 class="text-gold">Denise Russell</h4>
-                            <div class="position text-white">Executive Director</div>
+                            <h4 class="text-gold">{{ member.name }}</h4>
+                            <div class="position text-white">{{ member.position }}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="card card-black black-scroll">
-                    <div class="card-body team-card">
-                        <div class="team-photo">
-                            <img src="/static/images/photos/staff/mike.jpg" alt="Team Member">
-                        </div>
-                        <div class="team-info">
-                            <h4 class="text-gold">Mike Villarreal</h4>
-                            <div class="position text-white">Associate Director</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                <div class="card card-black black-scroll">
-                    <div class="card-body team-card">
-                        <div class="team-photo">
-                            <img src="/static/images/photos/staff/jan.jpg" alt="Team Member">
-                        </div>
-                        <div class="team-info">
-                            <h4 class="text-gold">Jan Dugdale</h4>
-                            <div class="position text-white">Food Pantry Assistant</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6" data-aos="fade-up">
-                <div class="card card-black black-scroll">
-                    <div class="card-body team-card">
-                        <div class="team-photo">
-                            <img src="/static/images/photos/staff/deb.jpg" alt="Team Member">
-                        </div>
-                        <div class="team-info">
-                            <h4 class="text-gold">Deb Vega</h4>
-                            <div class="position text-white">Breakfast Program Coordinator</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -111,69 +74,17 @@
     <div class="container">
         <h2 class="text-center mb-5" data-aos="fade-up">KWC Board of Directors</h2>
         <div class="row g-4">
-            <div class="col-lg-3" data-aos="fade-up">
+            {% for member in board_members|sort(attribute='order') %}
+            <div class="col-lg-3" data-aos="fade-up"{% if not loop.first %} data-aos-delay="{{ loop.index0 * 100 }}"{% endif %}>
                 <div class="card card-gold gold-scroll">
                     <div class="card-body director-card">
-                        <h3>Gary Lyons</h3>
-                        <div class="position text-black fs-italic">President</div>
-                        <p>IT Enterprise Systems Consultant (retired)</p>
+                        <h3>{{ member.name }}</h3>
+                        <div class="position text-black fs-italic">{{ member.position }}</div>
+                        <p>{{ member.description }}</p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                <div class="card card-gold gold-scroll">
-                    <div class="card-body director-card">
-                        <h3>Lyn Stevens</h3>
-                        <div class="position text-black fs-italic">Treasurer</div>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="200">
-                <div class="card card-gold gold-scroll">
-                    <div class="card-body director-card">
-                        <h3>Bill Siel</h3>
-                        <div class="position text-black fs-italic">Secretary</div>
-                        <p>2nd District Alderperson - City of Kenosha Common Council</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="300">
-                <div class="card card-gold gold-scroll">
-                    <div class="card-body director-card">
-                        <h3>Dena Cory</h3>
-                        <div class="position text-black fs-italic">Director</div>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="400">
-                <div class="card card-gold gold-scroll">
-                    <div class="card-body director-card">
-                        <h3>Brandi Ferree</h3>
-                        <div class="position text-black fs-italic">Director</div>
-                        <p>6th District Alderperson - City of Kenosha Common Council</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="500">
-                <div class="card card-gold gold-scroll">
-                    <div class="card-body director-card">
-                        <h3>Position - Open</h3>
-                        <div class="position text-black fs-italic">Director</div>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="600">
-                <div class="card card-gold gold-scroll">
-                    <div class="card-body director-card">
-                        <h3>Position - Open</h3>
-                        <div class="position text-black fs-italic">Director</div>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -184,194 +95,48 @@
         <h2 class="text-center mb-5" data-aos="fade-up">Our Journey</h2>
         <div class="row">
             <div class="col-lg-10 offset-lg-1">
+                {% for item in timeline_items|sort(attribute='date') %}
                 <div class="timeline-item card-silver silver-scroll" data-aos="fade-up">
-                    <div class="date btn-gold">2017</div>
+                    <div class="date btn-gold">{{ item.date.strftime('%Y') }}</div>
                     <div class="content">
-                        <h3>Foundation</h3>
-                        <p><b>Grace Welcome Center</b> begins serving breakfasts to 6 guests with 4 volunteers as a
-                            ministry of a local church.</p>
+                        <h3>{{ item.title }}</h3>
+                        <div>{{ item.description|safe }}</div>
                     </div>
                 </div>
-                <div class="timeline-item card-silver silver-scroll" data-aos="fade-up">
-                    <div class="date btn-gold">2019</div>
-                    <div class="content">
-                        <h3>Food Pantry Launch</h3>
-                        <p>Responding to community needs GWC expanded services to include a <b>weekly</b> food pantry.
-                        </p>
-                    </div>
-                </div>
-                <div class="timeline-item card-silver silver-scroll" data-aos="fade-up">
-                    <div class="date btn-gold">2021</div>
-                    <div class="content">
-                        <h3>Infrastructure Growth</h3>
-                        <p>Installation of walk-in cooler and freezer systems, significantly expanding food storage
-                            capacity and distribution capabilities.</p>
-                    </div>
-                </div>
-                <div class="timeline-item card-silver silver-scroll" data-aos="fade-up">
-                    <div class="date btn-gold">2023</div>
-                    <div class="content">
-                        <h3>Community Impact</h3>
-                        <p>Achieved milestone of over <b>10,000 pantry visits</b>, <b>6,000 breakfasts meals</b>, and
-                            <b>600 showers</b>.</p>
-                    </div>
-                </div>
-                <div class="timeline-item card-silver silver-scroll" data-aos="fade-up">
-                    <div class="date btn-gold">2024</div>
-                    <div class="content">
-                        <h3>Path to Independence</h3>
-                        <p>GWC approved to pursue independent nonprofit status to expand services and community impact.
-                        </p>
-                    </div>
-                </div>
-                <div class="timeline-item card-silver silver-scroll" data-aos="fade-up">
-                    <div class="date btn-gold">2024</div>
-                    <div class="content">
-                        <h3>Kenosha Welcome Center Established</h3>
-                        <p>Officially incorporated as <b>Kenosha Welcome Center</b>, continuing its mission as an
-                            independent nonprofit organization.</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </section>
 
 <!-- Partnership Section -->
-<section class="section section-gold gold-scroll">
+<section class="section partnership-section section-gold gold-scroll">
     <div class="container">
         <h2 class="text-center mb-5" data-aos="fade-up">Our Partners</h2>
-        <div class="row g-4 justify-content-center">
+        <div class="row g-2 justify-content-center">
+            {% for partner in partners|sort(attribute='order') %}
+            <div class="col-lg-2 col-md-3 col-sm-4 col-4" data-aos="fade-up">
+                <a href="{{ partner.url }}" target="_blank" rel="noopener noreferrer">
+                    <div class="card partner-card card-white hover-shine text-center">
+                        <div class="card-body partner-card-body d-flex align-items-center justify-content-center">
 
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
+                                {% if partner.logo_url %}
+                                <img src="{{ partner.logo_url }}" alt="{{ partner.name }}" class="partner-logo">
+                                {% else %}
+                                <div class="partner-name">
+                                    <h5 class="mb-0 text-black fw-bold">{{ partner.name }}</h5>
+                                </div>
+                                {% endif %}
+
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Partner -->
-            <div class="col-md-3 col-6" data-aos="fade-up">
-                <div class="card card-white hover-shine text-center">
-                    <div class="card-body">
-                        <img src="/api/placeholder/200/100" alt="Partner Logo" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
+            {% endfor %}
         </div>
     </div>
 </section>
+
 
 
 {% endblock content %}

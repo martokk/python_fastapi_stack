@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import HTMLResponse
+from sqlmodel import Session
 
-from app import models
+from app import crud
 from app.views import deps, templates
 
 router = APIRouter()
@@ -52,11 +53,16 @@ async def showers(
 @router.get("/homeless-services", response_class=HTMLResponse)
 async def homeless_services(
     request: Request,
+    db: Session = Depends(deps.get_db),
 ) -> Response:
     """
     Homeless Services page
     """
+    program_name = "Homeless Services"
+    faqs = await crud.programs.get_faqs_by_program_name(db=db, name=program_name)
+
     context = {
         "request": request,
+        "faqs": faqs,
     }
     return templates.TemplateResponse("programs/homeless-services.html", context=context)

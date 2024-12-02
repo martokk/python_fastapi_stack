@@ -5,7 +5,7 @@
         <!-- Google Maps Embed -->
         <div class="map-container" data-aos="fade-up" data-aos-delay="400">
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2979.268625210289!2d-87.83419748418435!3d42.58115027916927!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88055a9b6cd26b0b%3A0xc57945d1a6e6c1fb!2s2006%2060th%20St%2C%20Kenosha%2C%20WI%2053140%2C%20USA!5e0!3m2!1sen!2suk!4v1644724609600!5m2!1sen!2suk"
+                src="https://www.google.com/maps/embed/v1/place?key={{ GOOGLE_MAPS_API_KEY }}&q={{ variables.service_address|urlencode }}"
                 width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
             </iframe>
         </div>
@@ -16,13 +16,13 @@
             <!-- Service Location -->
             <div class="pt-4" data-aos="fade-left" data-aos-delay="600">
                 <h3>Service Location</h3>
-                <p>2006 60th St. Kenosha, WI 53140</p>
+                <p>{{ variables.service_address }}</p>
             </div>
 
             <!-- Mailing Address -->
             <div class="pt-4" data-aos="fade-right" data-aos-delay="800">
                 <h3>Mailing Address</h3>
-                <p>4623 75th St. STE 4-177 Kenosha, WI 53142</p>
+                <p>{{ variables.mailing_address }}</p>
             </div>
 
         </div>

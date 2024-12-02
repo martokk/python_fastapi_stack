@@ -1,10 +1,12 @@
 from typing import Any
 
 from sqlalchemy.engine.base import Engine
-from sqlmodel import Session, SQLModel
+from sqlmodel import Session, SQLModel, select
 
 from app import crud, logger, models, settings
 from app.db.session import engine as _engine
+from app.models.user_permissions import UserPermissions
+from app.utils.model_utils import get_permission_fields
 
 
 async def create_all(engine: Engine = _engine, sqlmodel_create_all: bool = False) -> None:
@@ -29,14 +31,39 @@ async def create_all(engine: Engine = _engine, sqlmodel_create_all: bool = False
 
 
 async def init_initial_data(db: Session, **kwargs: Any) -> None:
+    """Initialize database with initial data"""
+
     await create_all(**kwargs)
 
-    user = await crud.user.get_or_none(db=db, username=settings.FIRST_SUPERUSER_USERNAME)
-    if not user:
+    superuser = await crud.user.get_or_none(db=db, username=settings.FIRST_SUPERUSER_USERNAME)
+    if not superuser:
         user_create = models.UserCreateWithPassword(
             username=settings.FIRST_SUPERUSER_USERNAME,
             email=settings.FIRST_SUPERUSER_EMAIL,
             password=settings.FIRST_SUPERUSER_PASSWORD,
             is_superuser=True,
         )
-        await crud.user.create_with_password(db=db, obj_in=user_create)
+        superuser = await crud.user.create_with_password(db=db, obj_in=user_create)
+
+    # Check and set full privileges for superuser
+    permissions = db.exec(
+        select(UserPermissions).where(UserPermissions.user_id == superuser.id)
+    ).first()
+
+    if not permissions:
+        # Create new permissions with all privileges
+        permissions = UserPermissions(
+            user_id=superuser.id, **{field: True for field in get_permission_fields()}
+        )
+        db.add(permissions)
+    else:
+        # Update existing permissions to ensure all are True
+        for field in get_permission_fields():
+            setattr(permissions, field, True)
+
+    db.commit()
+
+    # Create stats
+    stats = await crud.stats.get_first(db=db)
+    if not stats:
+        stats = await crud.stats.create(db=db, obj_in=models.Stats())

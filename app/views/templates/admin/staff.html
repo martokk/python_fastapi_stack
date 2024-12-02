@@ -1,0 +1,411 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Staff Members{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Staff Members</h2>
+        <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="showOrderModal()">
+                <i class="fas fa-sort"></i> Edit Order
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                <i class="fas fa-plus"></i> Add Staff Member
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row" id="staffList">
+            {% for member in staff_members|sort(attribute='order') %}
+            <div class="col-md-6 mb-4" id="staff-{{ member.id }}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        {% if member.photo_url %}
+                        <img src="{{ member.photo_url }}" alt="{{ member.name }}" class="img-fluid mb-3" style="max-height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <h5 class="card-title">{{ member.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ member.position }}</h6>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-primary" onclick="editStaffMember({{ member.id }})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteStaffMember({{ member.id }})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Staff Member Modal -->
+<div class="modal fade" id="addStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Staff Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addStaffForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Position</label>
+                        <input type="text" class="form-control" id="position" name="position" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Photo (Optional)</label>
+                        <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitStaffForm()">Add Staff Member</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Staff Member Modal -->
+<div class="modal fade" id="editStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Staff Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editStaffForm" enctype="multipart/form-data">
+                    <input type="hidden" id="editStaffId" name="id">
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPosition" class="form-label">Position</label>
+                        <input type="text" class="form-control" id="editPosition" name="position" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhoto" class="form-label">Photo (Optional)</label>
+                        <input type="file" class="form-control" id="editPhoto" name="photo" accept="image/*">
+                        <div id="currentPhoto" class="mt-2"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateStaffMember()">Update Staff Member</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    Click and drag items to reorder them.
+                </div>
+                <ul class="list-group" id="sortableList">
+                    {% for member in staff_members|sort(attribute='order') %}
+                    <li class="list-group-item d-flex align-items-center cursor-move" data-id="{{ member.id|string }}">
+                        <i class="fas fa-grip-vertical me-3 text-muted"></i>
+                        <span>{{ member.name }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveOrder()">Save Order</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_dependencies %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<style>
+    .cursor-move {
+        cursor: move;
+    }
+    .sortable-ghost {
+        opacity: 0.4;
+        background-color: #c8ebfb !important;
+    }
+    .sortable-drag {
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block js_scripts %}
+<script>
+// Helper function for error handling
+async function handleApiError(error) {
+    console.error('API Error:', error);
+    let errorMessage = 'An error occurred';
+
+    if (error.response) {
+        try {
+            const data = await error.response.json();
+            errorMessage = data.detail || data.message || errorMessage;
+        } catch (e) {
+            errorMessage = error.message || errorMessage;
+        }
+    } else {
+        errorMessage = error.message || errorMessage;
+    }
+
+    alert(errorMessage);
+}
+
+// Helper function for delete confirmation
+function confirmDelete(message) {
+    return confirm(message);
+}
+
+// Initialize Sortable
+let sortable;
+function initSortable() {
+    const el = document.getElementById('sortableList');
+    if (el) {
+        sortable = new Sortable(el, {
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            dragClass: 'sortable-drag',
+            // Remove handle option to make entire item draggable
+            cursor: 'move'
+        });
+    }
+}
+
+// Show order modal
+function showOrderModal() {
+    updateOrderModalList().then(() => {
+        const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+        modal.show();
+    });
+}
+
+// Save new order
+async function saveOrder() {
+    const items = sortable.toArray();
+    console.log('Raw items:', items);  // Debug log
+
+    const updates = items.map((id, index) => {
+        const parsedId = parseInt(id, 10);
+        const parsedOrder = parseInt(index, 10);
+        console.log(`Converting id: ${id} to ${parsedId}, order: ${index} to ${parsedOrder}`);  // Debug log
+        return {
+            id: parsedId,
+            order: parsedOrder
+        };
+    });
+
+    console.log('Request payload:', { updates });  // Debug log
+
+    try {
+        const response = await fetch('/admin/staff-order', {  // Updated endpoint path
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ updates })
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            console.error('Error response:', data);  // Debug log
+            if (data.detail) {
+                throw {
+                    response,
+                    message: Array.isArray(data.detail) ? data.detail[0].msg : data.detail
+                };
+            } else {
+                throw {
+                    response,
+                    message: data.error || `Failed to update order: ${response.statusText}`
+                };
+            }
+        }
+
+        location.reload();
+    } catch (error) {
+        await handleApiError(error);
+    }
+}
+
+// Helper function to update order modal list
+async function updateOrderModalList() {
+    try {
+        const response = await fetch('/admin/staff-list');
+        if (!response.ok) {
+            throw new Error('Failed to fetch staff members');
+        }
+        const members = await response.json();
+
+        // Sort members by order
+        members.sort((a, b) => a.order - b.order);
+
+        // Update the list
+        const list = document.getElementById('sortableList');
+        if (list) {
+            list.innerHTML = members.map(member => `
+                <li class="list-group-item d-flex align-items-center cursor-move" data-id="${member.id}">
+                    <i class="fas fa-grip-vertical me-3 text-muted"></i>
+                    <span>${member.name}</span>
+                </li>
+            `).join('');
+
+            // Reinitialize Sortable
+            initSortable();
+        }
+    } catch (error) {
+        console.error('Failed to update order modal list:', error);
+    }
+}
+
+// Add new staff member
+async function submitStaffForm() {
+    const form = document.getElementById('addStaffForm');
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch('/admin/staff', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw {
+                response,
+                message: data.detail || `Failed to add staff member: ${response.statusText}`
+            };
+        }
+
+        // Close the add modal
+        const addModal = bootstrap.Modal.getInstance(document.getElementById('addStaffModal'));
+        if (addModal) {
+            addModal.hide();
+        }
+
+        // Update the order modal list
+        await updateOrderModalList();
+
+        // Refresh the page
+        location.reload();
+    } catch (error) {
+        await handleApiError(error);
+    }
+}
+
+// Edit staff member
+async function editStaffMember(memberId) {
+    try {
+        const response = await fetch(`/admin/staff/${memberId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch staff member: ${response.statusText}`);
+        }
+
+        const member = await response.json();
+        document.getElementById('editStaffId').value = member.id;
+        document.getElementById('editName').value = member.name;
+        document.getElementById('editPosition').value = member.position;
+
+        const currentPhotoDiv = document.getElementById('currentPhoto');
+        if (member.photo_url) {
+            currentPhotoDiv.innerHTML = `
+                <img src="${member.photo_url}" alt="${member.name}" class="img-thumbnail" style="max-height: 100px">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="removePhoto" name="remove_photo">
+                    <label class="form-check-label" for="removePhoto">
+                        Remove current photo
+                    </label>
+                </div>
+            `;
+        } else {
+            currentPhotoDiv.innerHTML = '<p class="text-muted">No photo uploaded</p>';
+        }
+
+        new bootstrap.Modal(document.getElementById('editStaffModal')).show();
+    } catch (error) {
+        handleApiError(error);
+    }
+}
+
+// Update staff member
+async function updateStaffMember() {
+    const form = document.getElementById('editStaffForm');
+    const formData = new FormData(form);
+    const memberId = document.getElementById('editStaffId').value;
+
+    // Handle photo removal checkbox
+    const removePhoto = document.getElementById('removePhoto');
+    if (removePhoto && removePhoto.checked) {
+        formData.append('remove_photo', 'true');
+    }
+
+    try {
+        const response = await fetch(`/admin/staff/${memberId}`, {
+            method: 'PUT',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update staff member: ${response.statusText}`);
+        }
+
+        location.reload();
+    } catch (error) {
+        handleApiError(error);
+    }
+}
+
+// Delete staff member
+async function deleteStaffMember(memberId) {
+    if (!confirmDelete('Are you sure you want to delete this staff member?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/staff/${memberId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw {
+                response,
+                message: data.detail || `Failed to delete staff member: ${response.statusText}`
+            };
+        }
+
+        // Remove the item from the page
+        document.getElementById(`staff-${memberId}`).remove();
+
+        // Update the order modal list
+        await updateOrderModalList();
+    } catch (error) {
+        await handleApiError(error);
+    }
+}
+</script>
+{% endblock %}

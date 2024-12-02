@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="admin-container">
+
+    <!-- Alerts -->
+    <div class="container mt-2">
+        {% include "base/alerts.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mt-2">
+        {% block admin_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

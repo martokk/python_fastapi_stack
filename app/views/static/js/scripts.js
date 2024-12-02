@@ -7,14 +7,7 @@ AOS.init({
 
 });
 
-// Import all modules
-import './counters.js';
-import './donations.js';
-import './forms.js';
-import './navbar.js';
-import './preloader.js';
-import './scroll-effect.js';
-import './utils.js';
+
 // Handle window resize
 window.addEventListener('resize', () => {
     AOS.refresh();

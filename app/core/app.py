@@ -5,11 +5,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from app import logger, models, settings, version
 from app.api import deps
-from app.api.v1.api import api_router
 from app.core import notify
 from app.db.init_db import init_initial_data
-from app.paths import STATIC_PATH
-from app.views.router import views_router
+from app.middleware.error_handler import error_handler_middleware
+from app.middleware.template_context import TemplateContextMiddleware
+from app.paths import STATIC_PATH, UPLOAD_PATH
+from app.routes.api import api_router
+from app.routes.views import views_router
 
 # Initialize FastAPI App
 app = FastAPI(
@@ -21,8 +23,12 @@ app = FastAPI(
 app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 app.include_router(views_router)
 
-# STATIC_PATH.mkdir(parents=True, exist_ok=True)
+# Mount static and uploads directories
+STATIC_PATH.mkdir(parents=True, exist_ok=True)
+UPLOAD_PATH.mkdir(parents=True, exist_ok=True)
+
 app.mount("/static", StaticFiles(directory=STATIC_PATH))
+app.mount("/uploads", StaticFiles(directory=UPLOAD_PATH))
 
 
 # Add the middleware to your FastAPI app
@@ -55,9 +61,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Content-Security-Policy"] = (
             """
             default-src 'self';
-            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com;
-            script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com;
-            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com https://cdn.quilljs.com;
+            script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://donorbox.org https://*.googleapis.com https://maps.googleapis.com https://cdn.quilljs.com;
+            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.quilljs.com;
             font-src 'self' https://fonts.gstatic.com;
             img-src 'self' data: https://*.googleapis.com https://*.gstatic.com;
             frame-src https://donorbox.org https://www.google.com https://*.google.com;
@@ -72,6 +78,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(TemplateContextMiddleware)
+app.middleware("http")(error_handler_middleware)
 
 
 @app.on_event("startup")  # type: ignore

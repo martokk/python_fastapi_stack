@@ -1,0 +1,853 @@
+# KWC Website - Technical Documentation for AI Models
+
+This document provides technical information about the KWC Website project structure, specifically written for AI models to assist with development.
+
+## 1. Project Overview
+
+A FastAPI-based web application that serves both as a web interface and API backend. The project uses a modern Python stack with SQLModel for database operations and Jinja2 for template rendering.
+
+### Technical Stack
+- **Framework**: FastAPI
+- **Database ORM**: SQLModel (SQLAlchemy-based)
+- **Template Engine**: Jinja2
+- **Authentication**: JWT-based with OAuth2
+- **Frontend**: HTML/CSS/JS with Bootstrap
+- **Static File Handling**: Built-in FastAPI StaticFiles
+- **File Upload Handling**: Custom implementation with aiofiles
+- **Security**: Custom middleware for security headers
+- **Logging**: Loguru
+
+### Template Structure
+
+The application uses a hierarchical template structure with Jinja2:
+
+#### Base Template Blocks
+
+1. **Content Blocks**:
+   - `{% block content %}`: Main content area
+   - `{% block title %}`: Page title
+   - `{% block meta_description %}`: SEO meta description
+   - `{% block meta_keywords %}`: SEO meta keywords
+
+2. **JavaScript Blocks**:
+   - `{% block js_scripts %}`: For page-specific JavaScript code
+   - `{% block js_dependencies %}`: For additional JavaScript dependencies
+   - IMPORTANT: Do not use `{% block extra_js %}`, it does not exist.
+
+3. **CSS Blocks**:
+   - `{% block head %}`: Additional head elements
+   - `{% block css %}`: Page-specific CSS
+
+#### Template Inheritance
+
+```html
+{# base/base.html - Root template #}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    {# JavaScript Dependencies #}
+    <script src="/static/js/scripts.js"></script>
+    {% block js_dependencies %}{% endblock %}
+    {% block js_scripts %}{% endblock %}
+</body>
+</html>
+
+{# admin/base.html - Admin template #}
+{% extends "base/base.html" %}
+{% block content %}
+    <div class="admin-container">
+        {% block admin_content %}{% endblock %}
+    </div>
+{% endblock %}
+```
+
+#### Best Practices
+
+1. **JavaScript Placement**:
+   - Use `js_dependencies` for third-party libraries
+   - Use `js_scripts` for page-specific code
+   - Always place scripts at the end of the body
+
+2. **Template Organization**:
+   - Extend from appropriate base template
+   - Use consistent block names
+   - Keep templates DRY with includes
+   - Use proper block inheritance
+
+### Environment Configuration
+
+The project uses Pydantic-based settings validation:
+
+```python
+# app/models/settings.py
+class Settings(BaseSettings):
+    # Environment
+    ENV_NAME: str = "development"
+    DEBUG: bool = True
+
+    # Server
+    SERVER_HOST: str = "0.0.0.0"
+    SERVER_PORT: int = 5000
+    BASE_URL: str = "http://localhost:5000"
+
+    # Database
+    DATABASE_URL: str = "sqlite:///./sql_app.db"
+
+    # Security
+    SECRET_KEY: str
+    JWT_ACCESS_SECRET_KEY: str
+    JWT_REFRESH_SECRET_KEY: str
+
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+```
+
+Required `.env` variables:
+```
+ENV_NAME=development
+SECRET_KEY=your-secret-key
+JWT_ACCESS_SECRET_KEY=your-jwt-access-key
+JWT_REFRESH_SECRET_KEY=your-jwt-refresh-key
+```
+
+## 2. Architecture
+
+### Core Components (/app/core/)
+
+The core directory contains the fundamental components that power the application. Here's a detailed breakdown of each component:
+
+#### 1. `app.py` - Application Initialization
+- **Purpose**: Main FastAPI application initialization and configuration
+- **Key Components**:
+  - FastAPI app instance creation with project settings
+  - Router registration (API and views)
+  - Static files mounting
+  - Security middleware implementation
+  - Startup event handlers
+- **Security Features**:
+  - Comprehensive security headers (CSP, HSTS, etc.)
+  - Protection against common web vulnerabilities
+  - Content Security Policy configuration
+
+#### 2. `security.py` - Authentication & Authorization
+- **Purpose**: Handles all security-related functionality
+- **Key Features**:
+  - Password hashing and verification (using bcrypt)
+  - JWT token encoding and decoding
+  - Access and refresh token management
+  - OAuth2 password flow implementation
+- **Token Management**:
+  - Token generation with configurable expiration
+  - Token refresh mechanism
+  - Fresh token handling for sensitive operations
+
+#### 3. `notify.py` - Notification System
+- **Purpose**: Manages application notifications and emails
+- **Features**:
+  - Email notification system
+  - Template-based email generation
+  - Support for HTML emails using Jinja2 templates
+- **Email Types**:
+  - Test emails
+  - Password reset emails
+  - New account notifications
+  - System notifications
+
+#### 4. `proxy.py` - Reverse Proxy
+- **Purpose**: Handles reverse proxy functionality
+- **Features**:
+  - Async request forwarding
+  - Header management
+  - Error handling for proxy requests
+- **Security**:
+  - Request validation
+  - Response status checking
+  - Secure connection handling
+
+#### 5. `server.py` - Server Configuration
+- **Purpose**: Uvicorn server setup and configuration
+- **Features**:
+  - Server initialization
+  - Configuration loading from settings
+  - Worker management
+  - Logging configuration
+
+#### 6. `uuid.py` - UUID Generation
+- **Purpose**: Handles unique identifier generation
+- **Features**:
+  - URL-based UUID generation
+  - String-based UUID generation
+  - Random UUID generation
+  - Short UUID format (8 characters)
+
+#### 7. `debug_helpers.py` - Debugging Utilities
+- **Purpose**: Development and debugging tools
+- **Features**:
+  - Function entry/exit logging
+  - Execution time measurement
+  - Debug logging decorators
+- **Decorators**:
+  - `@log_function_enter_exit`: Logs function calls and returns
+  - `@timeit`: Measures function execution time
+
+### API vs Web App Architecture
+
+The application serves both as a REST API and a web application. Here's how they're organized:
+
+#### Route Structure
+```
+app/
+├── routes/
+│   ├── api.py          # API route registration
+│   └── views.py        # Web view route registration
+│
+├── api/
+│   └── v1/
+│       └── endpoints/  # API endpoint handlers
+│           ├── login.py
+│           └── users.py
+│
+└── views/
+    └── pages/         # Web page handlers
+        ├── admin/
+        ├── programs.py
+        └── root.py
+```
+
+#### Key Differences
+
+1. **URL Patterns**
+   - API Routes: `/api/v1/*` (e.g., `/api/v1/users`)
+   - Web Routes: Direct paths (e.g., `/admin`, `/programs`)
+
+2. **Response Types**
+   - API Endpoints:
+     ```python
+     @router.get("/users", response_model=list[models.UserRead])
+     async def get_users() -> list[models.User]:
+         return await crud.user.get_multi()
+     ```
+   - Web Pages:
+     ```python
+     @router.get("/users", response_class=HTMLResponse)
+     async def users_page(request: Request) -> Response:
+         return templates.TemplateResponse("users.html", {"request": request})
+     ```
+
+3. **Data Models**
+   - Shared Models: Both use the same SQLModel-based models
+   - API Models: Include Pydantic schemas for request/response validation
+   - Web Forms: Use form data and template rendering
+
+#### When to Use Each
+
+1. **Use API Routes When**:
+   - Building a REST API for external consumption
+   - Implementing AJAX functionality
+   - Needing structured JSON responses
+   - Building mobile app backends
+   - Requiring strict data validation
+
+2. **Use Web Routes When**:
+   - Creating user-facing pages
+   - Needing server-side rendering
+   - Implementing form submissions
+   - Managing user sessions
+   - Requiring immediate redirects
+
+#### Shared Components
+
+1. **Models**
+   ```python
+   class User(SQLModel, table=True):
+       # Used by both API and Web routes
+       id: str = Field(default_factory=uuid.uuid4, primary_key=True)
+       username: str
+       email: str
+   ```
+
+2. **CRUD Operations**
+   ```python
+   # Used by both API endpoints and web pages
+   async def get_user(db: Session, user_id: str) -> User:
+       return await crud.user.get(db=db, id=user_id)
+   ```
+
+3. **Authentication**
+   - Both use the same JWT-based authentication
+   - API uses Bearer tokens
+   - Web uses cookie-based storage
+
+#### Best Practices
+
+1. **API Development**
+   - Use proper HTTP methods (GET, POST, PUT, DELETE)
+   - Implement proper response models
+   - Return appropriate status codes
+   - Document using OpenAPI/Swagger
+
+2. **Web Development**
+   - Use templates for rendering
+   - Implement proper form handling
+   - Use the alert system for user feedback
+   - Handle sessions via cookies
+
+3. **Shared Practices**
+   - Maintain consistent error handling
+   - Use dependency injection
+   - Follow the same security practices
+   - Share database models and CRUD operations
+
+### Authentication Flow
+
+```
+Login Request → Validate Credentials → Generate Tokens → Set Cookies/Headers
+     ↑                                                          ↓
+     ↑                                                    Protected Routes
+     ↑                                                          ↓
+     └──────────────── Refresh Token ←──── Token Validation ←──┘
+```
+
+1. **API Authentication**
+   - Bearer token in Authorization header
+   - Access token for requests
+   - Refresh token for getting new access tokens
+
+2. **Web Authentication**
+   - Cookie-based token storage
+   - Automatic token refresh
+   - RedirectException for unauthorized access
+
+### Database Management
+
+The project uses SQLModel (SQLAlchemy-based) with Alembic for migrations. When making changes to models, the end user must be notified to update their database.
+
+#### Model Changes
+When a model is modified (e.g., adding/removing fields, changing types), the end user needs to:
+1. Generate a new migration (provide a [description_of_changes])
+2. Apply the migration
+3. Update initial data if needed
+
+Example notification for users:
+```
+After updating the model, please run:
+1. alembic revision --autogenerate -m "[description_of_changes]"
+2. alembic upgrade head
+```
+
+## 3. Project Structure
+
+### Directory Organization
+
+```
+app/
+├── core/                  # Core application components
+│   ├── app.py            # FastAPI application initialization and middleware
+│   ├── security.py       # Security utilities (JWT, password hashing)
+│   ├── notify.py         # Notification system
+│   ├── proxy.py          # Proxy configuration
+│   ├── server.py         # Uvicorn server configuration
+│   ├── uuid.py           # UUID generation utilities
+│   └── debug_helpers.py  # Debugging utilities
+
+├── crud/                  # Database CRUD operations
+│   ├── base.py           # Base CRUD class with common operations
+│   ├── exceptions.py     # CRUD-specific exceptions
+│   ├── user.py           # User-specific CRUD operations
+│   └── [other crud]      # Other model specific CRUD operations
+
+├── models/               # SQLModel database models
+│   ├── admin.py         # Admin and permissions models
+│   ├── alerts.py        # Alert system models
+│   ├── base.py          # Base model classes
+│   └── [other models]   # Other domain models
+
+├── views/               # Web view handlers
+│   ├── deps.py         # Dependency injection utilities
+│   ├── pages/          # Page-specific view handlers
+│   ├── templates/      # Jinja2 templates
+│   ├── static/         # Static assets
+│   └── email-templates/ # Email template files
+```
+
+### Static Files Structure
+
+```
+static/
+├── css/              # Stylesheets
+│   ├── main.css      # Main styles
+│   ├── admin/        # Admin-specific styles
+│   └── components/   # Reusable components
+├── js/               # JavaScript files
+│   ├── main.js       # Main scripts
+│   └── components/   # Reusable components
+├── img/              # Static images
+└── uploads/          # User uploaded content
+    ├── avatars/      # User avatars
+    └── content/      # General uploads
+```
+
+#### Upload Configurations
+- Maximum file size: 5MB
+- Allowed image types: jpg, png, gif
+- Secure filename generation using UUID
+- Separate directories by content type
+
+### Testing Structure
+
+```
+tests/
+├── conftest.py           # Shared fixtures
+├── api/                  # API endpoint tests
+│   └── v1/
+│       ├── test_users.py
+│       └── test_auth.py
+├── core/                 # Core component tests
+├── crud/                # Database operation tests
+└── views/               # Web view tests
+    └── pages/
+        └── test_admin.py
+```
+
+#### Test Conventions
+- Test files prefixed with `test_`
+- Test functions prefixed with `test_`
+- Fixtures in conftest.py for reusability
+- Async tests for async functions
+
+## 4. Development Patterns
+
+### Template Structure
+
+```
+templates/
+├── base/
+│   ├── base.html     # Base template with common structure
+│   ├── _layout.html  # Common layout elements
+│   └── _navbar.html  # Navigation component
+├── admin/           # Admin section templates
+├── user/            # User section templates
+└── section/         # Feature-specific templates
+    ├── index.html   # Extends base.html
+    └── _form.html   # Partial template
+```
+
+#### Template Inheritance
+```html
+{# base/base.html #}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% include 'base/_navbar.html' %}
+        {% block content %}{% endblock %}
+        {% include 'base/_alerts.html' %}
+    </body>
+</html>
+
+{# section/index.html #}
+{% extends "base/base.html" %}
+{% block content %}
+    <h1>{{ title }}</h1>
+    {% include 'section/_form.html' %}
+{% endblock %}
+```
+
+#### Template Context
+```python
+# Common context available in all templates
+context = {
+    "request": request,
+    "user": current_user,
+    "alerts": alerts,
+    "user_permissions": permissions
+}
+```
+
+### Alert System
+
+The application uses a Bootstrap-based alert system for user notifications. Here's how it works:
+
+#### Alert Types
+```python
+class Alerts(SQLModel):
+    primary: list[str] = []    # Primary alerts
+    secondary: list[str] = []  # Secondary alerts
+    success: list[str] = []    # Success messages
+    danger: list[str] = []     # Error messages
+    warning: list[str] = []    # Warning messages
+    info: list[str] = []       # Information messages
+    light: list[str] = []      # Light alerts
+    dark: list[str] = []       # Dark alerts
+```
+
+#### Usage in Views
+
+There are two main ways to use alerts in views:
+
+1. **Direct Template Context**
+   ```python
+   # In view handler
+   alerts = models.Alerts()
+   alerts.success.append("Operation completed successfully")
+   context["alerts"] = alerts
+   return templates.TemplateResponse("template.html", context)
+   ```
+
+2. **Cookie-Based (Persists Across Redirects)**
+   ```python
+   # Setting alert in view handler
+   alerts = models.Alerts()
+   alerts.success.append("Changes saved")
+   response = RedirectResponse("/success", status_code=302)
+   response.set_cookie(
+       key="alerts",
+       value=alerts.json(),
+       max_age=5,  # Expires in 5 seconds
+       httponly=True
+   )
+   return response
+
+   # Reading alert in another view
+   alerts = models.Alerts().from_cookies(request.cookies)
+   # or
+   alerts = models.Alerts().from_request(request)
+   ```
+
+#### Key Features
+- **Bootstrap Integration**: Alerts use Bootstrap classes for styling
+- **Multiple Alert Types**: Support for different alert contexts
+- **Temporary Storage**: Cookie-based alerts auto-expire
+- **Request Integration**: Can be extracted directly from request object
+- **Template Support**: Easy integration with Jinja2 templates
+
+#### Best Practices
+1. Use direct context for immediate responses
+2. Use cookies for alerts after redirects
+3. Set appropriate expiration times for cookie alerts
+4. Clear alerts after displaying them
+5. Use appropriate alert types for different messages:
+   - `success`: Successful operations
+   - `danger`: Errors and failures
+   - `warning`: Important notices
+   - `info`: General information
+
+### Best Practices
+
+#### Code Organization Pattern
+```python
+# 1. Model Definition (app/models/example.py)
+class Example(SQLModel, table=True):
+    id: str = Field(default_factory=uuid.uuid4, primary_key=True)
+    name: str
+
+# 2. CRUD Operations (app/crud/example.py)
+class CRUDExample(CRUDBase[Example, ExampleCreate, ExampleUpdate]):
+    async def get_by_name(self, db: Session, name: str) -> Example | None:
+        return await self.get_or_none(db=db, name=name)
+
+# 3. API Route (app/api/v1/endpoints/example.py)
+@router.get("/{id}", response_model=ExampleRead)
+async def get_example(
+    id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+) -> Example:
+    return await crud.example.get(db=db, id=id)
+
+# 4. Web Route (app/views/pages/example.py)
+@router.get("/{id}", response_class=HTMLResponse)
+async def example_page(
+    request: Request,
+    id: str,
+    current_user: User = Depends(get_current_active_user),
+) -> Response:
+    example = await crud.example.get(db=db, id=id)
+    context = await get_template_context(request, current_user)
+    context["example"] = example
+    return templates.TemplateResponse("example.html", context)
+```
+
+### CSS Guidelines
+
+#### Structure
+```
+static/css/
+├── main.css           # Core styles and utilities
+├── components/        # Reusable component styles
+│   ├── buttons.css
+│   ├── cards.css
+│   └── forms.css
+└── admin/            # Admin-specific styles
+    └── dashboard.css
+```
+
+#### Class Usage Priority
+1. **Bootstrap Classes**: Use existing Bootstrap classes first
+   ```html
+   <!-- Prefer Bootstrap utilities -->
+   <div class="d-flex justify-content-between align-items-center mb-3">
+   <button class="btn btn-primary">Submit</button>
+   ```
+
+2. **Utility Classes**: Use existing utility classes
+   ```html
+   <!-- Use utility classes for common patterns -->
+   <div class="content-wrapper py-3">
+   <div class="text-muted small">
+   ```
+
+3. **Component Classes**: Use reusable component classes
+   ```html
+   <!-- Reusable component classes -->
+   <div class="card-dashboard">
+   <div class="form-section">
+   ```
+
+4. **Custom CSS**: Create new styles only when necessary
+   ```css
+   /* In components/cards.css */
+   .card-dashboard {
+       @extend .card;  /* Extend Bootstrap card */
+       border-left: 4px solid var(--primary);
+   }
+   ```
+
+#### Best Practices
+1. **Use Variables**
+   ```css
+   :root {
+       --primary: #007bff;
+       --spacing-lg: 2rem;
+   }
+   ```
+
+2. **Extend Existing Styles**
+   ```css
+   .btn-custom {
+       @extend .btn;
+       @extend .btn-primary;
+       border-radius: var(--border-radius-lg);
+   }
+   ```
+
+3. **Mobile-First**
+   ```css
+   .container {
+       padding: 1rem;  /* Mobile default */
+       @media (min-width: 768px) {
+           padding: 2rem;  /* Desktop */
+       }
+   }
+   ```
+
+### JavaScript Guidelines
+
+#### Structure
+```
+static/js/
+├── main.js           # Core functionality
+├── components/       # Reusable components
+│   ├── forms.js
+│   ├── modals.js
+│   └── tables.js
+└── utils/           # Utility functions
+    ├── api.js
+    └── validation.js
+```
+
+#### Code Reuse Priority
+1. **Bootstrap JS**: Use existing Bootstrap functionality
+   ```javascript
+   // Use Bootstrap's built-in modal
+   const modal = new bootstrap.Modal(document.getElementById('myModal'));
+   modal.show();
+   ```
+
+2. **Utility Functions**: Use shared utility functions
+   ```javascript
+   // In utils/api.js
+   async function apiRequest(endpoint, options = {}) {
+       const response = await fetch(endpoint, {
+           headers: {
+               'Content-Type': 'application/json',
+           },
+           ...options
+       });
+       return response.json();
+   }
+
+   // Usage
+   const data = await apiRequest('/api/users');
+   ```
+
+3. **Component Functions**: Use reusable component functions
+   ```javascript
+   // In components/forms.js
+   function initializeForm(formId, options = {}) {
+       const form = document.getElementById(formId);
+       form.addEventListener('submit', async (e) => {
+           e.preventDefault();
+           const data = new FormData(form);
+           // ... common form handling
+       });
+   }
+
+   // Usage
+   initializeForm('userForm', {
+       onSuccess: (data) => updateUI(data)
+   });
+   ```
+
+#### Best Practices
+1. **Event Delegation**
+   ```javascript
+   document.querySelector('.table-container').addEventListener('click', (e) => {
+       if (e.target.matches('.delete-btn')) {
+           handleDelete(e.target.dataset.id);
+       }
+   });
+   ```
+
+2. **Async/Await Pattern**
+   ```javascript
+   async function handleSubmit(e) {
+       try {
+           const data = await submitForm(e.target);
+           showAlert('success', 'Changes saved');
+       } catch (error) {
+           showAlert('danger', error.message);
+       }
+   }
+   ```
+
+3. **Data Attributes**
+   ```javascript
+   // HTML
+   <button data-action="delete" data-id="123">Delete</button>
+
+   // JavaScript
+   element.dataset.action === 'delete'
+   ```
+
+4. **Module Pattern**
+   ```javascript
+   // components/datatable.js
+   export const DataTable = {
+       initialize(tableId, options = {}) {
+           // Implementation
+       },
+       refresh() {
+           // Refresh logic
+       }
+   };
+
+   // Usage
+   import { DataTable } from './components/datatable.js';
+   DataTable.initialize('userTable');
+   ```
+
+### Database Model Patterns
+
+#### 1. Database Dependency Injection
+
+When using database dependency injection with FastAPI's `Depends`, always name the parameter `db`:
+
+```python
+@router.post("/endpoint", response_class=Response)
+async def handler(
+    request: Request,
+    content: str = Form(...),
+    context: dict[str, Any] = Depends(get_admin_context),
+    db: Session = Depends(get_db),  # Always use 'db' as parameter name
+) -> Response:
+    pass
+```
+
+#### 2. Model CRUD Implementation
+
+When a model needs to interact with the database, it should use the CRUD operations pattern. This requires several components:
+
+1. **Model Definition** (`app/models/example.py`):
+```python
+class Example(BaseModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    content: str = Field(default="", description="Content field", nullable=False)
+
+class ExampleCreate(Example):
+    @model_validator(mode="before")
+    @classmethod
+    def set_pre_validation_defaults(cls, values: dict[str, Any]) -> dict[str, Any]:
+        values["id"] = values.get("id", generate_uuid_random())
+        return values
+
+class ExampleUpdate(Example):
+    pass
+
+class ExampleRead(Example):
+    pass
+```
+
+2. **Model Registration** (`app/models/__init__.py`):
+```python
+from .example import *  # Add model to __init__.py
+```
+
+3. **CRUD Implementation** (`app/crud/example.py`):
+```python
+from app import models
+from .base import BaseCRUD
+
+class ExampleCRUD(BaseCRUD[models.Example, models.ExampleCreate, models.ExampleUpdate]):
+    pass
+
+example = ExampleCRUD(model=models.Example)
+```
+
+4. **CRUD Registration** (`app/crud/__init__.py`):
+```python
+from .example import *  # Add CRUD to __init__.py
+```
+
+5. **Usage in Routes**:
+```python
+from app import crud
+from app.models.example import ExampleCreate, ExampleUpdate
+
+# Get first record
+example = await crud.example.get_first(db=db)
+
+# Create new record
+if not example:
+    example = await crud.example.create(
+        db=db,
+        obj_in=ExampleCreate(content=content)
+    )
+
+# Update existing record
+else:
+    example = await crud.example.update(
+        db=db,
+        db_obj=example,
+        obj_in=ExampleUpdate(content=content)
+    )
+```
+
+This pattern ensures:
+- Consistent database operations across the application
+- Type safety through model validation
+- Separation of concerns between models and database operations
+- Reusable CRUD operations through inheritance
+- Proper dependency injection and database session management
+
+# Don't create migration files in replies
+ignore_files:
+  - migrations/versions/*.py

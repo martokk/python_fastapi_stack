@@ -6,6 +6,8 @@
 - Create Wish List Page
 - Create Amazon Wishlist Page
 - Volunteer Application
+    - Submitted Successfully Page
+        - Whats Next?
 - Fix @media layout sizes.
 
 # Before Launch
@@ -20,7 +22,6 @@
 - Setup Twitter
 
 # After Launch
-- Print.css
 - Create Single Program Pages
     - Food Pantry
         - Guest Application
